@@ -18,6 +18,9 @@ interface Wine {
   glass_price: number | null
 }
 
+const API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxeWt0bXZvdWFxcnlyY2JtbnZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwOTAxMDIsImV4cCI6MjA5NjY2NjEwMn0.UGWfG-gRgb4HifZU-iYJGn1fVeOxlVy6x3fywc_XZo8'
+const SUPABASE_URL = 'https://xqyktmvouaqryrcbmnvc.supabase.co'
+
 export default function CreateMenuPage() {
   const router = useRouter()
   const [wines, setWines] = useState<Wine[]>([])
@@ -25,6 +28,7 @@ export default function CreateMenuPage() {
   const [loading, setLoading] = useState(true)
   const [menuTitle, setMenuTitle] = useState('Menu')
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     const fetchWines = async () => {
@@ -35,12 +39,14 @@ export default function CreateMenuPage() {
           return
         }
 
+        const { access_token } = JSON.parse(token)
+
         const response = await fetch(
-          'https://xqyktmvouaqryrcbmnvc.supabase.co/rest/v1/wines?status=eq.Active&order=colour_style.asc,country.asc',
+          `${SUPABASE_URL}/rest/v1/wines?status=eq.Active&order=colour_style.asc,country.asc`,
           {
             headers: {
-              apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxeWt0bXZvdWFxcnlyY2JtbnZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwOTAxMDIsImV4cCI6MjA5NjY2NjEwMn0.UGWfG-gRgb4HifZU-iYJGn1fVeOxlVy6x3fywc_XZo8',
-              Authorization: `Bearer ${JSON.parse(token).access_token}`,
+              apikey: API_KEY,
+              Authorization: `Bearer ${access_token}`,
             },
           }
         )
@@ -49,6 +55,7 @@ export default function CreateMenuPage() {
         setWines(data)
       } catch (err) {
         console.error('Error fetching wines:', err)
+        setError('Failed to load wines')
       } finally {
         setLoading(false)
       }
@@ -70,6 +77,7 @@ export default function CreateMenuPage() {
     }
 
     setSaving(true)
+    setError('')
     try {
       const token = localStorage.getItem('supabase.auth.token')
       if (!token) {
@@ -77,25 +85,35 @@ export default function CreateMenuPage() {
         return
       }
 
-      const accessToken = JSON.parse(token).access_token
+      const { access_token } = JSON.parse(token)
 
       // Create menu
-      const menuResponse = await fetch('https://xqyktmvouaqryrcbmnvc.supabase.co/rest/v1/menus', {
+      console.log('Creating menu with title:', menuTitle)
+      const menuResponse = await fetch(`${SUPABASE_URL}/rest/v1/menus`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxeWt0bXZvdWFxcnlyY2JtbnZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwOTAxMDIsImV4cCI6MjA5NjY2NjEwMn0.UGWfG-gRgb4HifZU-iYJGn1fVeOxlVy6x3fywc_XZo8',
-          Authorization: `Bearer ${accessToken}`,
+          apikey: API_KEY,
+          Authorization: `Bearer ${access_token}`,
+          Prefer: 'return=representation',
         },
         body: JSON.stringify({ title: menuTitle }),
       })
 
-      const menu = await menuResponse.json()
-      if (!menu[0]?.id) {
-        throw new Error('Failed to create menu')
+      if (!menuResponse.ok) {
+        const errData = await menuResponse.text()
+        console.error('Menu creation error:', menuResponse.status, errData)
+        throw new Error(`Failed to create menu: ${menuResponse.status}`)
       }
 
-      const menuId = menu[0].id
+      const menuData = await menuResponse.json()
+      console.log('Menu created:', menuData)
+      
+      if (!menuData || menuData.length === 0) {
+        throw new Error('No menu returned')
+      }
+
+      const menuId = menuData[0].id
 
       // Group wines by colour and country
       const groupedWines = selectedWines.reduce(
@@ -110,7 +128,7 @@ export default function CreateMenuPage() {
           acc[key].wines.push(wineId)
           return acc
         },
-        {} as Record<string, { colour: string; country: string; wines: string[] }>
+        {} as Record<string, { colour: string; country: string | null; wines: string[] }>
       )
 
       // Create sections and items
@@ -118,39 +136,46 @@ export default function CreateMenuPage() {
       for (const { colour, country, wines: groupWines } of Object.values(groupedWines)) {
         const sectionName = `${colour}${country ? ` - ${country}` : ''}`
 
-        const sectionResponse = await fetch(
-          'https://xqyktmvouaqryrcbmnvc.supabase.co/rest/v1/menu_sections',
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxeWt0bXZvdWFxcnlyY2JtbnZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwOTAxMDIsImV4cCI6MjA5NjY2NjEwMn0.UGWfG-gRgb4HifZU-iYJGn1fVeOxlVy6x3fywc_XZo8',
-              Authorization: `Bearer ${accessToken}`,
-            },
-            body: JSON.stringify({
-              menu_id: menuId,
-              name: sectionName,
-              sort_order: sectionOrder++,
-            }),
-          }
-        )
+        console.log('Creating section:', sectionName)
+        const sectionResponse = await fetch(`${SUPABASE_URL}/rest/v1/menu_sections`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            apikey: API_KEY,
+            Authorization: `Bearer ${access_token}`,
+            Prefer: 'return=representation',
+          },
+          body: JSON.stringify({
+            menu_id: menuId,
+            name: sectionName,
+            sort_order: sectionOrder++,
+          }),
+        })
 
-        const section = await sectionResponse.json()
-        if (!section[0]?.id) {
-          throw new Error('Failed to create menu section')
+        if (!sectionResponse.ok) {
+          const errData = await sectionResponse.text()
+          console.error('Section creation error:', sectionResponse.status, errData)
+          throw new Error(`Failed to create section: ${sectionResponse.status}`)
         }
 
-        const sectionId = section[0].id
+        const sectionData = await sectionResponse.json()
+        if (!sectionData || sectionData.length === 0) {
+          throw new Error('No section returned')
+        }
+
+        const sectionId = sectionData[0].id
 
         // Create menu items
         let itemOrder = 0
         for (const wineId of groupWines) {
-          await fetch('https://xqyktmvouaqryrcbmnvc.supabase.co/rest/v1/menu_items', {
+          console.log('Creating menu item for wine:', wineId)
+          const itemResponse = await fetch(`${SUPABASE_URL}/rest/v1/menu_items`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxeWt0bXZvdWFxcnlyY2JtbnZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwOTAxMDIsImV4cCI6MjA5NjY2NjEwMn0.UGWfG-gRgb4HifZU-iYJGn1fVeOxlVy6x3fywc_XZo8',
-              Authorization: `Bearer ${accessToken}`,
+              apikey: API_KEY,
+              Authorization: `Bearer ${access_token}`,
+              Prefer: 'return=representation',
             },
             body: JSON.stringify({
               section_id: sectionId,
@@ -158,14 +183,22 @@ export default function CreateMenuPage() {
               sort_order: itemOrder++,
             }),
           })
+
+          if (!itemResponse.ok) {
+            const errData = await itemResponse.text()
+            console.error('Item creation error:', itemResponse.status, errData)
+            throw new Error(`Failed to create menu item: ${itemResponse.status}`)
+          }
         }
       }
 
       alert('Menu created successfully!')
       router.push(`/menu/${menuId}`)
     } catch (err) {
-      console.error('Error creating menu:', err)
-      alert('Failed to create menu')
+      const error = err as Error
+      console.error('Error creating menu:', error)
+      setError(error.message)
+      alert('Failed to create menu: ' + error.message)
     } finally {
       setSaving(false)
     }
@@ -222,6 +255,12 @@ export default function CreateMenuPage() {
                 placeholder="e.g., Summer 2026"
               />
             </div>
+
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg">
+                {error}
+              </div>
+            )}
 
             {Object.entries(winesByColour).map(([colour, colourWines]) => (
               <div key={colour} className="bg-white rounded-lg shadow p-6">
