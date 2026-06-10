@@ -21,7 +21,7 @@ export function WineListClient({ initialWines }: WineListClientProps) {
   }, [initialWines])
 
   const countries = useMemo(() => {
-    return Array.from(new Set(initialWines.map((w) => w.country))).filter(Boolean).sort()
+    return Array.from(new Set(initialWines.map((w) => w.country).filter(Boolean))) as string[]
   }, [initialWines])
 
   // Filter wines

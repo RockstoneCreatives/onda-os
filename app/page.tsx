@@ -1,131 +1,190 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { WineListClient } from '@/components/wine-list-client'
+import { supabase } from '@/lib/supabase/client'
+import { toast } from 'sonner'
 
-interface Wine {
-  id: string
-  colour_style: string
-  region: string | null
-  country: string | null
-  producer: string
-  name: string
-  vintage: string | null
-  grapes: string | null
-  btg: boolean
-  importer: string | null
-  cost_price: number | null
-  sale_price: number | null
-  glass_price: number | null
-  inventory_location: string | null
-  status: 'Active' | 'Inactive'
-  created_at: string
-  updated_at: string
+interface Stats {
+  totalWines: number
+  activeWines: number
+  inactiveWines: number
+  menusCreated: number
 }
 
-export default function HomePage() {
+export default function DashboardPage() {
   const router = useRouter()
-  const [wines, setWines] = useState<Wine[]>([])
+  const [stats, setStats] = useState<Stats>({
+    totalWines: 0,
+    activeWines: 0,
+    inactiveWines: 0,
+    menusCreated: 0,
+  })
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
 
   useEffect(() => {
-    const fetchWines = async () => {
+    const fetchStats = async () => {
       try {
-        const token = localStorage.getItem('supabase.auth.token')
-        if (!token) {
+        // Check auth
+        const {
+          data: { session },
+          error: authError,
+        } = await supabase.auth.getSession()
+        if (authError || !session) {
           router.push('/login')
           return
         }
 
-        const response = await fetch('https://xqyktmvouaqryrcbmnvc.supabase.co/rest/v1/wines?status=eq.Active&order=colour_style.asc,country.asc', {
-          headers: {
-            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxeWt0bXZvdWFxcnlyY2JtbnZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwOTAxMDIsImV4cCI6MjA5NjY2NjEwMn0.UGWfG-gRgb4HifZU-iYJGn1fVeOxlVy6x3fywc_XZo8',
-            'Authorization': `Bearer ${JSON.parse(token).access_token}`,
-          },
+        // Fetch wine counts
+        const [allWines, activeWinesResp, inactiveWinesResp, menusResp] =
+          await Promise.all([
+            supabase.from('wines').select('id', { count: 'exact' }),
+            supabase
+              .from('wines')
+              .select('id', { count: 'exact' })
+              .eq('status', 'Active'),
+            supabase
+              .from('wines')
+              .select('id', { count: 'exact' })
+              .eq('status', 'Inactive'),
+            supabase.from('menus').select('id', { count: 'exact' }),
+          ])
+
+        setStats({
+          totalWines: allWines.count || 0,
+          activeWines: activeWinesResp.count || 0,
+          inactiveWines: inactiveWinesResp.count || 0,
+          menusCreated: menusResp.count || 0,
         })
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch wines: ${response.status}`)
-        }
-
-        const data = await response.json()
-        setWines(data)
       } catch (err) {
         const error = err as Error
-        console.error('Error fetching wines:', error)
-        setError(error.message)
+        toast.error('Failed to load dashboard stats')
+        console.error(error)
       } finally {
         setLoading(false)
       }
     }
 
-    fetchWines()
+    fetchStats()
   }, [router])
 
-  const handleLogout = () => {
-    localStorage.removeItem('supabase.auth.token')
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    toast.success('Logged out')
     router.push('/login')
   }
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-slate-600">Loading wines...</p>
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-6 py-8">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-4xl font-bold text-slate-900">Onda OS</h1>
-              <p className="text-slate-600 mt-2">Wine Inventory & Menu Generator</p>
-            </div>
-            <div className="space-x-4">
-              <Link
-                href="/menu/new"
-                className="inline-block px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition"
-              >
-                Create Menu
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="px-6 py-2 border border-slate-300 text-slate-700 font-medium rounded-lg hover:bg-slate-50 transition"
-              >
-                Sign Out
-              </button>
-            </div>
+      <header className="bg-white border-b border-onda-border">
+        <div className="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-onda-accent">Onda OS</h1>
+            <p className="text-slate-600 text-sm mt-1">Wine Management System</p>
           </div>
+          <button
+            onClick={handleLogout}
+            className="px-4 py-2 border border-onda-border text-slate-700 rounded-lg hover:bg-onda-surface transition"
+          >
+            Sign Out
+          </button>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-6 py-8">
-        <div className="bg-white rounded-lg shadow">
-          <div className="p-6 border-b border-slate-200">
-            <h2 className="text-2xl font-bold text-slate-900">Wine List</h2>
-            <p className="text-slate-600 mt-1">{wines.length} wines available</p>
-            {error && <p className="text-red-600 mt-2">{error}</p>}
+      <main className="max-w-7xl mx-auto px-6 py-12">
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-onda-accent mx-auto"></div>
+            <p className="mt-4 text-slate-600">Loading dashboard...</p>
           </div>
-
-          {wines.length > 0 ? (
-            <WineListClient initialWines={wines} />
-          ) : (
-            <div className="p-8 text-center text-slate-600">
-              No wines found
+        ) : (
+          <>
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+              <div className="bg-onda-surface rounded-lg border border-onda-border p-6">
+                <p className="text-slate-600 text-sm font-medium">Total Wines</p>
+                <p className="text-4xl font-bold text-onda-accent mt-2">
+                  {stats.totalWines}
+                </p>
+              </div>
+              <div className="bg-onda-surface rounded-lg border border-onda-border p-6">
+                <p className="text-slate-600 text-sm font-medium">Active Wines</p>
+                <p className="text-4xl font-bold text-slate-900 mt-2">
+                  {stats.activeWines}
+                </p>
+              </div>
+              <div className="bg-onda-surface rounded-lg border border-onda-border p-6">
+                <p className="text-slate-600 text-sm font-medium">Inactive Wines</p>
+                <p className="text-4xl font-bold text-slate-600 mt-2">
+                  {stats.inactiveWines}
+                </p>
+              </div>
+              <div className="bg-onda-surface rounded-lg border border-onda-border p-6">
+                <p className="text-slate-600 text-sm font-medium">Menus Created</p>
+                <p className="text-4xl font-bold text-slate-900 mt-2">
+                  {stats.menusCreated}
+                </p>
+              </div>
             </div>
-          )}
-        </div>
+
+            {/* Quick Actions */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Wine Management */}
+              <div className="bg-white rounded-lg border border-onda-border p-8">
+                <h2 className="text-xl font-bold text-slate-900 mb-4">
+                  Wine Management
+                </h2>
+                <p className="text-slate-600 mb-6">
+                  Browse, add, edit, and manage your wine inventory with all
+                  details from the master list.
+                </p>
+                <Link
+                  href="/wines"
+                  className="inline-block px-6 py-2 bg-onda-accent text-white font-medium rounded-lg hover:opacity-90 transition"
+                >
+                  Browse Wine List →
+                </Link>
+              </div>
+
+              {/* Menu Builder */}
+              <div className="bg-white rounded-lg border border-onda-border p-8">
+                <h2 className="text-xl font-bold text-slate-900 mb-4">
+                  Create Menu
+                </h2>
+                <p className="text-slate-600 mb-6">
+                  Build a new menu by selecting wines. They'll automatically
+                  group by style and country for the PDF export.
+                </p>
+                <Link
+                  href="/menus/new"
+                  className="inline-block px-6 py-2 bg-onda-accent text-white font-medium rounded-lg hover:opacity-90 transition"
+                >
+                  Create New Menu →
+                </Link>
+              </div>
+
+              {/* Menu History */}
+              <div className="bg-white rounded-lg border border-onda-border p-8">
+                <h2 className="text-xl font-bold text-slate-900 mb-4">
+                  Menu History
+                </h2>
+                <p className="text-slate-600 mb-6">
+                  View and export menus you've created previously. Re-export
+                  PDFs or create variations.
+                </p>
+                <Link
+                  href="/menus"
+                  className="inline-block px-6 py-2 bg-onda-accent text-white font-medium rounded-lg hover:opacity-90 transition"
+                >
+                  View Menu History →
+                </Link>
+              </div>
+            </div>
+          </>
+        )}
       </main>
     </div>
   )
