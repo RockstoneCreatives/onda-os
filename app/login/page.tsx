@@ -2,12 +2,11 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase/client'
 
 export default function LoginPage() {
   const router = useRouter()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('juan@onda.bar')
+  const [password, setPassword] = useState('OndaOS2025!Secure')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -17,18 +16,44 @@ export default function LoginPage() {
     setLoading(true)
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      console.log('Attempting login...')
+      
+      // Call auth API directly
+      const response = await fetch('https://xqyktmvouaqryrcbmnvc.supabase.co/auth/v1/token?grant_type=password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxeWt0bXZvdWFxcnlyY2JtbnZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwOTAxMDIsImV4cCI6MjA5NjY2NjEwMn0.UGWfG-gRgb4HifZU-iYJGn1fVeOxlVy6x3fywc_XZo8',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
       })
 
-      if (error) {
-        setError(error.message)
-      } else {
-        router.push('/')
+      const data = await response.json()
+      console.log('Auth response:', { status: response.status, hasToken: !!data.access_token })
+
+      if (!response.ok || !data.access_token) {
+        setError(data.error_description || 'Login failed. Check your email and password.')
+        console.error('Login error:', data)
+        return
       }
+
+      // Store token in localStorage
+      localStorage.setItem('supabase.auth.token', JSON.stringify({
+        access_token: data.access_token,
+        refresh_token: data.refresh_token,
+        expires_at: data.expires_at,
+      }))
+
+      console.log('Login successful, redirecting...')
+      // Redirect to home
+      router.push('/')
     } catch (err) {
-      setError('An error occurred. Please try again.')
+      const error = err as Error
+      console.error('Login exception:', error)
+      setError(error.message || 'An error occurred. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -54,6 +79,7 @@ export default function LoginPage() {
               className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="juan@onda.bar"
               disabled={loading}
+              required
             />
           </div>
 
@@ -68,6 +94,7 @@ export default function LoginPage() {
               className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="••••••••"
               disabled={loading}
+              required
             />
           </div>
 
@@ -85,6 +112,12 @@ export default function LoginPage() {
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
+
+        <div className="mt-6 p-4 bg-slate-100 rounded-lg text-xs text-slate-600">
+          <p className="font-semibold mb-2">Demo Credentials (Pre-filled):</p>
+          <p>Email: juan@onda.bar</p>
+          <p>Password: OndaOS2025!Secure</p>
+        </div>
 
         <p className="text-center text-slate-600 text-sm mt-6">
           Built by{' '}
