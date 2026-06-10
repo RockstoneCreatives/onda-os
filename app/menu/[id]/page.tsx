@@ -46,13 +46,13 @@ export default function MenuDetailPage() {
         }
 
         const accessToken = JSON.parse(token).access_token
+        const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxeWt0bXZvdWFxcnlyY2JtbnZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwOTAxMDIsImV4cCI6MjA5NjY2NjEwMn0.UGWfG-gRgb4HifZU-iYJGn1fVeOxlVy6x3fywc_XZo8'
 
-        // Fetch menu with sections and items
         const response = await fetch(
           `https://xqyktmvouaqryrcbmnvc.supabase.co/rest/v1/menus?id=eq.${menuId}`,
           {
             headers: {
-              apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxeWt0bXZvdWFxcnlyY2JtbnZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwOTAxMDIsImV4cCI6MjA5NjY2NjEwMn0.UGWfG-gRgb4HifZU-iYJGn1fVeOxlVy6x3fywc_XZo8',
+              apikey: apiKey,
               Authorization: `Bearer ${accessToken}`,
             },
           }
@@ -66,12 +66,11 @@ export default function MenuDetailPage() {
 
         const menu = menus[0]
 
-        // Fetch sections
         const sectionsResponse = await fetch(
           `https://xqyktmvouaqryrcbmnvc.supabase.co/rest/v1/menu_sections?menu_id=eq.${menuId}&order=sort_order.asc`,
           {
             headers: {
-              apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxeWt0bXZvdWFxcnlyY2JtbnZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwOTAxMDIsImV4cCI6MjA5NjY2NjEwMn0.UGWfG-gRgb4HifZU-iYJGn1fVeOxlVy6x3fywc_XZo8',
+              apikey: apiKey,
               Authorization: `Bearer ${accessToken}`,
             },
           }
@@ -79,14 +78,13 @@ export default function MenuDetailPage() {
 
         const sections = await sectionsResponse.json()
 
-        // Fetch items for each section
         const sectionsWithWines = await Promise.all(
-          sections.map(async (section) => {
+          sections.map(async (section: any) => {
             const itemsResponse = await fetch(
               `https://xqyktmvouaqryrcbmnvc.supabase.co/rest/v1/menu_items?section_id=eq.${section.id}&order=sort_order.asc`,
               {
                 headers: {
-                  apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxeWt0bXZvdWFxcnlyY2JtbnZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwOTAxMDIsImV4cCI6MjA5NjY2NjEwMn0.UGWfG-gRgb4HifZU-iYJGn1fVeOxlVy6x3fywc_XZo8',
+                  apikey: apiKey,
                   Authorization: `Bearer ${accessToken}`,
                 },
               }
@@ -94,14 +92,13 @@ export default function MenuDetailPage() {
 
             const items = await itemsResponse.json()
 
-            // Fetch wine details for each item
             const wines = await Promise.all(
-              items.map(async (item) => {
+              items.map(async (item: any) => {
                 const wineResponse = await fetch(
                   `https://xqyktmvouaqryrcbmnvc.supabase.co/rest/v1/wines?id=eq.${item.wine_id}`,
                   {
                     headers: {
-                      apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxeWt0bXZvdWFxcnlyY2JtbnZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwOTAxMDIsImV4cCI6MjA5NjY2NjEwMn0.UGWfG-gRgb4HifZU-iYJGn1fVeOxlVy6x3fywc_XZo8',
+                      apikey: apiKey,
                       Authorization: `Bearer ${accessToken}`,
                     },
                   }
@@ -159,7 +156,6 @@ export default function MenuDetailPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Header */}
       <header className="bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div>
@@ -180,7 +176,6 @@ export default function MenuDetailPage() {
         </div>
       </header>
 
-      {/* Menu Preview */}
       <main className="max-w-4xl mx-auto px-6 py-8">
         <div className="bg-white rounded-lg shadow p-8 space-y-8">
           {menu.sections.map((section) => (

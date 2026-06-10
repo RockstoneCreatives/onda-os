@@ -44,13 +44,13 @@ export default function MenuPDFPage() {
         }
 
         const accessToken = JSON.parse(token).access_token
+        const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxeWt0bXZvdWFxcnlyY2JtbnZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwOTAxMDIsImV4cCI6MjA5NjY2NjEwMn0.UGWfG-gRgb4HifZU-iYJGn1fVeOxlVy6x3fywc_XZo8'
 
-        // Fetch menu
         const menuResponse = await fetch(
           `https://xqyktmvouaqryrcbmnvc.supabase.co/rest/v1/menus?id=eq.${menuId}`,
           {
             headers: {
-              apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxeWt0bXZvdWFxcnlyY2JtbnZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwOTAxMDIsImV4cCI6MjA5NjY2NjEwMn0.UGWfG-gRgb4HifZU-iYJGn1fVeOxlVy6x3fywc_XZo8',
+              apikey: apiKey,
               Authorization: `Bearer ${accessToken}`,
             },
           }
@@ -64,12 +64,11 @@ export default function MenuPDFPage() {
 
         const menuData = menus[0]
 
-        // Fetch sections with wines
         const sectionsResponse = await fetch(
           `https://xqyktmvouaqryrcbmnvc.supabase.co/rest/v1/menu_sections?menu_id=eq.${menuId}&order=sort_order.asc`,
           {
             headers: {
-              apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxeWt0bXZvdWFxcnlyY2JtbnZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwOTAxMDIsImV4cCI6MjA5NjY2NjEwMn0.UGWfG-gRgb4HifZU-iYJGn1fVeOxlVy6x3fywc_XZo8',
+              apikey: apiKey,
               Authorization: `Bearer ${accessToken}`,
             },
           }
@@ -78,12 +77,12 @@ export default function MenuPDFPage() {
         const sections = await sectionsResponse.json()
 
         const sectionsWithWines = await Promise.all(
-          sections.map(async (section) => {
+          sections.map(async (section: any) => {
             const itemsResponse = await fetch(
               `https://xqyktmvouaqryrcbmnvc.supabase.co/rest/v1/menu_items?section_id=eq.${section.id}&order=sort_order.asc`,
               {
                 headers: {
-                  apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxeWt0bXZvdWFxcnlyY2JtbnZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwOTAxMDIsImV4cCI6MjA5NjY2NjEwMn0.UGWfG-gRgb4HifZU-iYJGn1fVeOxlVy6x3fywc_XZo8',
+                  apikey: apiKey,
                   Authorization: `Bearer ${accessToken}`,
                 },
               }
@@ -92,12 +91,12 @@ export default function MenuPDFPage() {
             const items = await itemsResponse.json()
 
             const wines = await Promise.all(
-              items.map(async (item) => {
+              items.map(async (item: any) => {
                 const wineResponse = await fetch(
                   `https://xqyktmvouaqryrcbmnvc.supabase.co/rest/v1/wines?id=eq.${item.wine_id}`,
                   {
                     headers: {
-                      apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxeWt0bXZvdWFxcnlyY2JtbnZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwOTAxMDIsImV4cCI6MjA5NjY2NjEwMn0.UGWfG-gRgb4HifZU-iYJGn1fVeOxlVy6x3fywc_XZo8',
+                      apikey: apiKey,
                       Authorization: `Bearer ${accessToken}`,
                     },
                   }
@@ -134,7 +133,6 @@ export default function MenuPDFPage() {
     if (!menu) return
 
     try {
-      // Create HTML content that matches Onda's PDF design
       const htmlContent = `
         <!DOCTYPE html>
         <html>
@@ -221,7 +219,6 @@ export default function MenuPDFPage() {
         </html>
       `
 
-      // Open print dialog
       const printWindow = window.open('', '', 'width=800,height=600')
       if (printWindow) {
         printWindow.document.write(htmlContent)
