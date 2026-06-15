@@ -255,29 +255,47 @@ export async function GET(
 ) {
   try {
     const { id: menuId } = await params
-    const menuData = await fetchMenuData(menuId)
+    console.log('[PDF] Fetching menu data for:', menuId)
 
+    const menuData = await fetchMenuData(menuId)
     if (!menuData) {
+      console.log('[PDF] Menu not found:', menuId)
       return NextResponse.json({ error: 'Menu not found' }, { status: 404 })
     }
 
+    console.log('[PDF] Menu found, creating PDF for:', menuData.title)
+    console.log('[PDF] Menu sections:', menuData.menu_sections?.length)
+
     // Generate PDF
-    const pdf = createMenuPDF(menuData)
-    const buffer = await renderToBuffer(pdf)
-    const arrayBuffer = buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength)
+    try {
+      const pdf = createMenuPDF(menuData)
+      console.log('[PDF] PDF document created successfully')
 
-    const filename = `ONDA-Menu-${menuData.title}-${new Date().toISOString().split('T')[0]}.pdf`
+      const buffer = await renderToBuffer(pdf)
+      console.log('[PDF] Buffer rendered, size:', buffer.length)
 
-    return new NextResponse(buffer as any, {
-      headers: {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="${filename}"`,
-      },
-    })
+      const filename = `ONDA-Menu-${menuData.title}-${new Date().toISOString().split('T')[0]}.pdf`
+
+      return new NextResponse(buffer as any, {
+        headers: {
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': `attachment; filename="${filename}"`,
+        },
+      })
+    } catch (pdfError) {
+      console.error('[PDF] PDF generation failed:', pdfError)
+      throw pdfError
+    }
   } catch (error) {
-    console.error('PDF generation error:', error)
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error'
+    const errorStack = error instanceof Error ? error.stack : ''
+    console.error('[PDF] Error:', errorMsg, errorStack)
+
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to generate PDF' },
+      {
+        error: errorMsg,
+        details: process.env.NODE_ENV === 'development' ? errorStack : undefined
+      },
       { status: 500 }
     )
   }
