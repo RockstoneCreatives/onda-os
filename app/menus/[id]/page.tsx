@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
-import Link from 'next/link'
 import { supabase } from '@/lib/supabase/client'
 import { toast } from 'sonner'
+import { Nav } from '@/components/nav'
 import { SECTION_ORDER } from '@/constants/menu-sections'
 import type { Database } from '@/lib/supabase/client'
 
@@ -123,7 +123,6 @@ export default function MenuDetailPage() {
     if (newIndex < 0 || newIndex >= section.wines.length) return
 
     try {
-      // Swap sort orders
       const wine1 = section.wines[wineIndex]
       const wine2 = section.wines[newIndex]
 
@@ -132,7 +131,6 @@ export default function MenuDetailPage() {
         supabase.from('menu_items').update({ sort_order: wineIndex }).eq('id', wine2.menu_item_id),
       ])
 
-      // Update local state
       const newSections = menu.sections.map((s) => {
         if (s.id !== sectionId) return s
         const newWines = [...s.wines]
@@ -200,87 +198,78 @@ export default function MenuDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="text-center">
+      <div className="min-h-screen bg-white">
+        <Nav currentPage="menus" />
+        <main className="pt-24 text-center py-12">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-onda-accent mx-auto"></div>
-          <p className="mt-4 text-slate-600">Loading menu...</p>
-        </div>
+          <p className="mt-4 text-onda-muted font-condensed">Loading menu...</p>
+        </main>
       </div>
     )
   }
 
   if (!menu) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="text-center">
-          <p className="text-slate-600 mb-4">Menu not found</p>
-          <Link href="/menus" className="text-onda-accent hover:underline font-medium">
-            Back to Menus
-          </Link>
-        </div>
+      <div className="min-h-screen bg-white">
+        <Nav currentPage="menus" />
+        <main className="pt-24 max-w-6xl mx-auto px-6 text-center">
+          <p className="text-onda-text font-condensed mb-4">Menu not found</p>
+        </main>
       </div>
     )
   }
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
-      <header className="bg-white border-b border-onda-border sticky top-0 z-10">
-        <div className="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
-          <Link href="/menus" className="text-onda-accent font-bold text-lg hover:opacity-80">
-            ← Back
-          </Link>
-          <h1 className="text-2xl font-bold text-slate-900">Menu Details</h1>
-          <div className="flex gap-4">
-            <button
-              onClick={handleExportPDF}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm font-medium"
-            >
-              📥 Download PDF
-            </button>
-          </div>
-        </div>
-      </header>
+      <Nav currentPage="menus" />
 
-      <main className="max-w-5xl mx-auto px-6 py-8">
-        {/* Title Editor */}
-        <div className="bg-white rounded-lg border border-onda-border p-6 mb-8">
-          <label className="block text-sm font-medium text-slate-700 mb-2">Menu Title</label>
+      <main className="pt-24 max-w-6xl mx-auto px-6 pb-12">
+        <div className="mb-8 space-y-4">
+          <label className="block font-condensed font-bold uppercase text-xs text-onda-muted">
+            Menu Title
+          </label>
           <div className="flex gap-2">
             <input
               type="text"
               value={menuTitle}
               onChange={(e) => setMenuTitle(e.target.value)}
               disabled={saving}
-              className="flex-1 px-4 py-2 border border-onda-border rounded-lg focus:outline-none focus:ring-2 focus:ring-onda-accent"
+              className="flex-1 px-3 py-2 border border-onda-border bg-white font-condensed focus:outline-none focus:border-onda-accent"
             />
             <button
               onClick={handleUpdateTitle}
               disabled={saving}
-              className="px-4 py-2 bg-onda-accent text-white rounded-lg hover:opacity-90 disabled:opacity-50 transition font-medium"
+              className="px-4 py-2 bg-onda-accent text-white font-condensed font-bold uppercase text-sm hover:opacity-85 disabled:opacity-50 transition"
             >
               {saving ? 'Saving...' : 'Save'}
+            </button>
+            <button
+              onClick={handleExportPDF}
+              className="px-4 py-2 border border-onda-border text-onda-accent font-condensed font-bold uppercase text-sm hover:bg-onda-surface transition"
+            >
+              ↓ PDF
             </button>
           </div>
         </div>
 
-        {/* Sections */}
         <div className="space-y-8">
           {menu.sections.map((section) => (
-            <div key={section.id} className="bg-white rounded-lg border border-onda-border p-8">
-              <h2 className="text-2xl font-bold text-onda-accent mb-1">{section.name}</h2>
-              <p className="text-sm text-slate-600 mb-6">
-                {section.wines.length} {section.wines.length === 1 ? 'wine' : 'wines'}
-              </p>
+            <div key={section.id} className="border border-onda-border">
+              <h2 className="font-condensed font-bold uppercase text-onda-accent text-2xl px-4 py-3 border-b border-onda-border bg-white">
+                {section.name}
+              </h2>
+              <div className="px-4 py-3 border-b border-onda-border text-xs font-condensed text-onda-muted">
+                {section.wines.length} wine{section.wines.length !== 1 ? 's' : ''}
+              </div>
 
-              <div className="space-y-3">
+              <div className="divide-y divide-onda-border">
                 {section.wines.map((wine, idx) => (
-                  <div key={wine.id} className="flex items-start gap-4 pb-3 border-b border-onda-border last:border-0">
+                  <div key={wine.id} className="flex items-start gap-3 px-4 py-3 hover:bg-onda-surface transition">
                     <div className="flex flex-col gap-1">
                       <button
                         onClick={() => handleMoveWine(section.id, idx, 'up')}
                         disabled={idx === 0}
-                        className="px-2 py-1 text-slate-600 hover:text-onda-accent disabled:opacity-30 disabled:cursor-not-allowed text-lg"
+                        className="px-2 py-1 text-onda-text hover:text-onda-accent disabled:opacity-30 disabled:cursor-not-allowed font-condensed font-bold"
                         title="Move up"
                       >
                         ▲
@@ -288,7 +277,7 @@ export default function MenuDetailPage() {
                       <button
                         onClick={() => handleMoveWine(section.id, idx, 'down')}
                         disabled={idx === section.wines.length - 1}
-                        className="px-2 py-1 text-slate-600 hover:text-onda-accent disabled:opacity-30 disabled:cursor-not-allowed text-lg"
+                        className="px-2 py-1 text-onda-text hover:text-onda-accent disabled:opacity-30 disabled:cursor-not-allowed font-condensed font-bold"
                         title="Move down"
                       >
                         ▼
@@ -296,13 +285,13 @@ export default function MenuDetailPage() {
                     </div>
 
                     <div className="flex-1">
-                      <p className="font-medium text-slate-900">
+                      <p className="font-condensed font-bold text-onda-text">
                         {wine.producer} – {wine.name} {wine.vintage}
                       </p>
-                      <p className="text-sm text-slate-600">{wine.grapes}</p>
+                      <p className="text-sm font-condensed text-onda-muted">{wine.grapes}</p>
                     </div>
 
-                    <div className="text-right text-sm font-medium whitespace-nowrap">
+                    <div className="text-right text-sm font-condensed text-onda-muted whitespace-nowrap">
                       {wine.glass_price && <div>G: €{wine.glass_price.toFixed(2)}</div>}
                       <div>B: €{wine.sale_price?.toFixed(2)}</div>
                     </div>
@@ -311,16 +300,6 @@ export default function MenuDetailPage() {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Export Button */}
-        <div className="mt-12 pt-8 border-t border-onda-border">
-          <button
-            onClick={handleExportPDF}
-            className="px-8 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-bold text-lg"
-          >
-            📥 Download Menu as PDF
-          </button>
         </div>
       </main>
     </div>

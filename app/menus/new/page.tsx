@@ -2,9 +2,9 @@
 
 import { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { supabase } from '@/lib/supabase/client'
 import { toast } from 'sonner'
+import { Nav } from '@/components/nav'
 import { SECTION_ORDER } from '@/constants/menu-sections'
 import type { Database } from '@/lib/supabase/client'
 
@@ -177,87 +177,80 @@ export default function CreateMenuPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="text-center">
+      <div className="min-h-screen bg-white">
+        <Nav currentPage="create" />
+        <main className="pt-24 text-center py-12">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-onda-accent mx-auto"></div>
-          <p className="mt-4 text-slate-600">Loading wines...</p>
-        </div>
+          <p className="mt-4 text-onda-muted font-condensed">Loading wines...</p>
+        </main>
       </div>
     )
   }
 
   return (
     <div className="min-h-screen bg-white">
-      <header className="bg-white border-b border-onda-border sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <Link href="/menus" className="text-onda-accent font-bold text-lg hover:opacity-80">
-            ← Back
-          </Link>
-          <h1 className="text-2xl font-bold text-slate-900">Create Menu</h1>
-          <div className="w-32"></div>
-        </div>
-      </header>
+      <Nav currentPage="create" />
 
-      <main className="max-w-7xl mx-auto px-6 py-8">
+      <main className="pt-24 max-w-6xl mx-auto px-6 pb-12">
+        <h1 className="font-condensed font-bold uppercase text-5xl text-onda-accent mb-8">
+          Create Menu
+        </h1>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Wine Selection */}
           <div className="lg:col-span-2 space-y-6">
             {/* Menu Title */}
-            <div className="bg-white rounded-lg border border-onda-border p-6">
-              <label className="block text-sm font-medium text-slate-700 mb-2">Menu Title</label>
+            <div className="border border-onda-border p-4">
+              <label className="block font-condensed font-bold uppercase text-xs text-onda-muted mb-2">
+                Menu Title
+              </label>
               <input
                 type="text"
                 value={menuTitle}
                 onChange={(e) => setMenuTitle(e.target.value)}
                 placeholder="e.g., Summer 2026, June 20-26"
                 disabled={saving}
-                className="w-full px-4 py-2 border border-onda-border rounded-lg focus:outline-none focus:ring-2 focus:ring-onda-accent"
+                className="w-full px-3 py-2 border border-onda-border bg-white font-condensed focus:outline-none focus:border-onda-accent"
               />
             </div>
 
             {/* Filters */}
-            <div className="bg-onda-surface rounded-lg border border-onda-border p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Search</label>
-                  <input
-                    type="text"
-                    placeholder="Producer or wine name..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    disabled={saving}
-                    className="w-full px-3 py-2 border border-onda-border rounded-lg focus:outline-none focus:ring-2 focus:ring-onda-accent text-sm"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Style</label>
-                  <select
-                    value={filterColour}
-                    onChange={(e) => setFilterColour(e.target.value)}
-                    disabled={saving}
-                    className="w-full px-3 py-2 border border-onda-border rounded-lg focus:outline-none focus:ring-2 focus:ring-onda-accent text-sm"
-                  >
-                    <option value="">All Styles</option>
-                    {colours.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
+            <div className="flex gap-4">
+              <input
+                type="text"
+                placeholder="Search producer or wine name..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                disabled={saving}
+                className="flex-1 px-3 py-2 border border-onda-border bg-white font-condensed text-sm focus:outline-none focus:border-onda-accent"
+              />
+              <select
+                value={filterColour}
+                onChange={(e) => setFilterColour(e.target.value)}
+                disabled={saving}
+                className="px-3 py-2 border border-onda-border bg-white font-condensed text-sm focus:outline-none focus:border-onda-accent"
+              >
+                <option value="">All Styles</option>
+                {colours.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Wine List by Colour */}
-            <div className="space-y-4">
+            <div className="space-y-6">
               {Object.entries(winesByColour).map(([colour, colourWines]) => (
-                <div key={colour} className="bg-white rounded-lg border border-onda-border p-6">
-                  <h3 className="text-lg font-bold text-slate-900 mb-4">{colour}</h3>
-                  <div className="space-y-2">
+                <div key={colour} className="border border-onda-border">
+                  <h3 className="font-condensed font-bold uppercase text-onda-accent text-lg px-4 py-3 border-b border-onda-border bg-white">
+                    {colour}
+                  </h3>
+                  <div className="space-y-0">
                     {colourWines.map((wine) => (
                       <label
                         key={wine.id}
-                        className="flex items-start gap-3 p-3 hover:bg-onda-surface rounded-lg cursor-pointer transition"
+                        className="flex items-start gap-3 px-4 py-3 border-b border-onda-border hover:bg-onda-surface transition cursor-pointer last:border-b-0"
                       >
                         <input
                           type="checkbox"
@@ -267,14 +260,14 @@ export default function CreateMenuPage() {
                           className="mt-1"
                         />
                         <div className="flex-1">
-                          <p className="font-medium text-slate-900">
+                          <p className="font-condensed font-bold text-onda-text">
                             {wine.producer} – {wine.name} {wine.vintage || ''}
                           </p>
-                          <p className="text-sm text-slate-600">
+                          <p className="font-condensed text-sm text-onda-muted">
                             {wine.region} {wine.country && `(${wine.country})`}
                           </p>
                         </div>
-                        <div className="text-right text-sm font-medium text-slate-700 whitespace-nowrap">
+                        <div className="text-right text-sm font-condensed text-onda-muted whitespace-nowrap">
                           {wine.glass_price && <div>G: €{wine.glass_price.toFixed(2)}</div>}
                           <div>B: €{wine.sale_price?.toFixed(2)}</div>
                         </div>
@@ -288,18 +281,26 @@ export default function CreateMenuPage() {
 
           {/* Preview Sidebar */}
           <div className="lg:col-span-1">
-            <div className="sticky top-24 bg-white rounded-lg border border-onda-border p-6 space-y-4">
+            <div className="sticky top-32 border border-onda-border p-4 space-y-4">
               <div>
-                <h3 className="font-bold text-slate-900">Menu Preview</h3>
-                <p className="text-3xl font-bold text-onda-accent mt-2">{selectedWines.size}</p>
-                <p className="text-sm text-slate-600">wines selected</p>
+                <h3 className="font-condensed font-bold uppercase text-onda-text">Preview</h3>
+                <p className="text-4xl font-bold text-onda-accent mt-2 font-condensed">
+                  {selectedWines.size}
+                </p>
+                <p className="text-sm text-onda-muted font-condensed">
+                  wine{selectedWines.size !== 1 ? 's' : ''} selected
+                </p>
               </div>
 
-              <div className="pt-4 border-t border-onda-border space-y-2">
+              <div className="pt-4 border-t border-onda-border space-y-3">
                 {previewSections.map((section) => (
                   <div key={section.key}>
-                    <p className="text-sm font-bold text-slate-900">{section.display}</p>
-                    <p className="text-xs text-slate-600">{section.wines.length} wines</p>
+                    <p className="font-condensed font-bold text-onda-text uppercase text-sm">
+                      {section.display}
+                    </p>
+                    <p className="text-xs text-onda-muted font-condensed">
+                      {section.wines.length} wine{section.wines.length !== 1 ? 's' : ''}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -307,7 +308,7 @@ export default function CreateMenuPage() {
               <button
                 onClick={handleCreateMenu}
                 disabled={saving || selectedWines.size === 0 || !menuTitle.trim()}
-                className="w-full py-3 bg-onda-accent text-white font-semibold rounded-lg hover:opacity-90 disabled:opacity-50 transition"
+                className="w-full py-2 bg-onda-accent text-white font-condensed font-bold uppercase text-sm hover:opacity-85 disabled:opacity-50 transition"
               >
                 {saving ? 'Creating...' : 'Create Menu'}
               </button>
@@ -315,9 +316,9 @@ export default function CreateMenuPage() {
               <button
                 onClick={() => setSelectedWines(new Set())}
                 disabled={saving}
-                className="w-full py-2 border border-onda-border text-slate-700 rounded-lg hover:bg-onda-surface transition text-sm"
+                className="w-full py-2 border border-onda-border text-onda-text font-condensed font-bold uppercase text-xs hover:bg-onda-surface transition"
               >
-                Clear Selection
+                Clear
               </button>
             </div>
           </div>

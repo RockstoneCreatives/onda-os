@@ -5,10 +5,10 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase/client'
 import { toast } from 'sonner'
+import { Nav } from '@/components/nav'
 import type { Database } from '@/lib/supabase/client'
 
 type Wine = Database['public']['Tables']['wines']['Row']
-
 type ColumnKey = keyof Wine
 
 const ALL_COLUMNS: { key: ColumnKey; label: string }[] = [
@@ -126,193 +126,165 @@ export default function WinesPage() {
     localStorage.setItem('wine-list-columns', JSON.stringify(updated))
   }
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-    toast.success('Logged out')
-    router.push('/login')
+  const getDisplayValue = (wine: Wine, key: ColumnKey): string => {
+    const value = wine[key]
+    if (value === null || value === undefined) return '—'
+    if (key === 'btg') return (value as boolean) ? 'Yes' : 'No'
+    if (key === 'sale_price' || key === 'glass_price' || key === 'cost_price') {
+      return `€${(value as number).toFixed(2)}`
+    }
+    return String(value)
   }
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
-      <header className="bg-white border-b border-onda-border sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <div>
-            <Link href="/" className="text-onda-accent font-bold text-lg hover:opacity-80">
-              ← Back
-            </Link>
-          </div>
-          <h1 className="text-2xl font-bold text-slate-900">Wine List</h1>
-          <div className="flex gap-4">
-            <Link
-              href="/wines/new"
-              className="px-4 py-2 bg-onda-accent text-white rounded-lg hover:opacity-90 transition text-sm font-medium"
-            >
-              + Add Wine
-            </Link>
-            <button
-              onClick={handleLogout}
-              className="px-4 py-2 border border-onda-border text-slate-700 rounded-lg hover:bg-onda-surface transition text-sm"
-            >
-              Sign Out
-            </button>
-          </div>
-        </div>
-      </header>
+      <Nav currentPage="wines" />
 
-      <main className="max-w-7xl mx-auto px-6 py-8">
+      <main className="pt-24 max-w-6xl mx-auto px-6 pb-12">
         {loading ? (
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-onda-accent mx-auto"></div>
-            <p className="mt-4 text-slate-600">Loading wines...</p>
+            <p className="mt-4 text-onda-muted font-condensed">Loading wines...</p>
           </div>
         ) : (
           <>
-            {/* Filters */}
-            <div className="bg-onda-surface rounded-lg border border-onda-border p-6 mb-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Search</label>
-                  <input
-                    type="text"
-                    placeholder="Producer, name, country..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full px-3 py-2 border border-onda-border rounded-lg focus:outline-none focus:ring-2 focus:ring-onda-accent text-sm"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Style</label>
-                  <select
-                    value={filterColour}
-                    onChange={(e) => setFilterColour(e.target.value)}
-                    className="w-full px-3 py-2 border border-onda-border rounded-lg focus:outline-none focus:ring-2 focus:ring-onda-accent text-sm"
-                  >
-                    <option value="">All Styles</option>
-                    {colours.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Country</label>
-                  <select
-                    value={filterCountry}
-                    onChange={(e) => setFilterCountry(e.target.value)}
-                    className="w-full px-3 py-2 border border-onda-border rounded-lg focus:outline-none focus:ring-2 focus:ring-onda-accent text-sm"
-                  >
-                    <option value="">All Countries</option>
-                    {countries.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Status</label>
-                  <button
-                    onClick={() => setShowInactive(!showInactive)}
-                    className={`w-full px-3 py-2 rounded-lg border text-sm font-medium transition ${
-                      showInactive
-                        ? 'bg-onda-accent text-white border-onda-accent'
-                        : 'border-onda-border text-slate-700 hover:bg-white'
-                    }`}
-                  >
-                    {showInactive ? 'Showing All' : 'Active Only'}
-                  </button>
-                </div>
+            {/* Page Title */}
+            <h1 className="font-condensed font-bold uppercase text-5xl text-onda-accent mb-8">
+              Wine List
+            </h1>
+
+            {/* Controls */}
+            <div className="mb-8 space-y-4">
+              {/* Search and Filters Row */}
+              <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
+                <input
+                  type="text"
+                  placeholder="Search by producer, name, country..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="flex-1 px-3 py-2 border border-onda-border bg-white font-condensed text-sm focus:outline-none focus:border-onda-accent"
+                />
+                <select
+                  value={filterColour}
+                  onChange={(e) => setFilterColour(e.target.value)}
+                  className="px-3 py-2 border border-onda-border bg-white font-condensed text-sm focus:outline-none focus:border-onda-accent"
+                >
+                  <option value="">All Styles</option>
+                  {colours.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  value={filterCountry}
+                  onChange={(e) => setFilterCountry(e.target.value)}
+                  className="px-3 py-2 border border-onda-border bg-white font-condensed text-sm focus:outline-none focus:border-onda-accent"
+                >
+                  <option value="">All Countries</option>
+                  {countries.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
               </div>
 
-              <details className="pt-4 border-t border-onda-border">
-                <summary className="cursor-pointer text-sm font-medium text-slate-700 hover:text-onda-accent">
-                  Column Settings ⚙️
-                </summary>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
-                  {ALL_COLUMNS.map((col) => (
-                    <label key={col.key} className="flex items-center gap-2 text-sm">
-                      <input
-                        type="checkbox"
-                        checked={visibleColumns.includes(col.key)}
-                        onChange={() => handleToggleColumn(col.key)}
-                        className="rounded"
-                      />
-                      {col.label}
-                    </label>
-                  ))}
+              {/* Status and Actions Row */}
+              <div className="flex justify-between items-center">
+                <label className="flex items-center gap-2 font-condensed text-sm">
+                  <input
+                    type="checkbox"
+                    checked={showInactive}
+                    onChange={(e) => setShowInactive(e.target.checked)}
+                    className="w-4 h-4"
+                  />
+                  Show Inactive
+                </label>
+
+                <div className="flex gap-2">
+                  <details className="font-condensed text-sm">
+                    <summary className="cursor-pointer text-onda-accent hover:text-onda-text transition uppercase font-bold">
+                      Columns
+                    </summary>
+                    <div className="absolute bg-white border border-onda-border mt-2 p-3 space-y-2 z-50 min-w-40">
+                      {ALL_COLUMNS.map((col) => (
+                        <label key={col.key} className="flex items-center gap-2 text-sm cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={visibleColumns.includes(col.key)}
+                            onChange={() => handleToggleColumn(col.key)}
+                            className="w-4 h-4"
+                          />
+                          {col.label}
+                        </label>
+                      ))}
+                    </div>
+                  </details>
+                  <Link
+                    href="/wines/new"
+                    className="px-3 py-2 bg-onda-accent text-white font-condensed font-bold uppercase text-sm hover:opacity-85 transition"
+                  >
+                    + Add Wine
+                  </Link>
                 </div>
-              </details>
+              </div>
             </div>
 
-            {/* Results */}
-            <p className="text-sm text-slate-600 mb-4">
-              Showing {filteredWines.length} of {wines.length} wines
+            {/* Wine Count */}
+            <p className="text-onda-muted font-condensed text-sm mb-4">
+              {filteredWines.length} wine{filteredWines.length !== 1 ? 's' : ''} shown
             </p>
 
             {/* Table */}
-            <div className="bg-white rounded-lg border border-onda-border overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="bg-onda-surface border-b border-onda-border">
-                      <th className="px-4 py-3 text-left font-medium text-slate-900 w-12">#</th>
-                      {ALL_COLUMNS.filter((c) => visibleColumns.includes(c.key)).map((col) => (
-                        <th key={col.key} className="px-4 py-3 text-left font-medium text-slate-900">
-                          {col.label}
-                        </th>
-                      ))}
-                      <th className="px-4 py-3 text-left font-medium text-slate-900">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredWines.length === 0 ? (
-                      <tr>
-                        <td colSpan={visibleColumns.length + 2} className="px-4 py-8 text-center text-slate-600">
-                          No wines found
-                        </td>
-                      </tr>
-                    ) : (
-                      filteredWines.map((wine, idx) => (
-                        <tr key={wine.id} className="border-b border-onda-border hover:bg-onda-surface transition">
-                          <td className="px-4 py-3 text-slate-600">{idx + 1}</td>
-                          {ALL_COLUMNS.filter((c) => visibleColumns.includes(c.key)).map((col) => {
-                            const value = wine[col.key]
-                            let display = ''
+            <div className="border border-onda-border">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-onda-border">
+                    {visibleColumns.map((col) => (
+                      <th
+                        key={col}
+                        className="text-left px-4 py-3 font-condensed font-bold uppercase text-xs text-onda-text bg-white"
+                      >
+                        {ALL_COLUMNS.find((c) => c.key === col)?.label}
+                      </th>
+                    ))}
+                    <th className="text-left px-4 py-3 font-condensed font-bold uppercase text-xs text-onda-text bg-white w-20">
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredWines.map((wine, idx) => (
+                    <tr key={wine.id} className="border-b border-onda-border hover:bg-onda-surface transition">
+                      {visibleColumns.map((col) => {
+                        let cellClass = 'px-4 py-2 text-sm font-condensed'
+                        if (col === 'producer') cellClass += ' font-bold text-onda-text'
+                        else if (col === 'status')
+                          cellClass +=
+                            wine.status === 'Active'
+                              ? ' text-green-600 font-bold'
+                              : ' text-red-600 font-bold'
+                        else cellClass += ' text-onda-muted'
 
-                            if (value === null || value === undefined) {
-                              display = '—'
-                            } else if (col.key === 'btg') {
-                              display = value ? 'Yes' : 'No'
-                            } else if (col.key === 'status') {
-                              display = value as string
-                            } else if (typeof value === 'number') {
-                              display = '€' + value.toFixed(2)
-                            } else {
-                              display = String(value)
-                            }
-
-                            return (
-                              <td key={col.key} className="px-4 py-3 text-slate-700">
-                                {display}
-                              </td>
-                            )
-                          })}
-                          <td className="px-4 py-3">
-                            <Link
-                              href={`/wines/${wine.id}/edit`}
-                              className="text-onda-accent hover:underline text-sm font-medium"
-                            >
-                              Edit
-                            </Link>
+                        return (
+                          <td key={col} className={cellClass}>
+                            {getDisplayValue(wine, col)}
                           </td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
+                        )
+                      })}
+                      <td className="px-4 py-2 text-sm">
+                        <Link
+                          href={`/wines/${wine.id}/edit`}
+                          className="text-onda-accent font-condensed font-bold hover:text-onda-text transition uppercase"
+                        >
+                          Edit
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </>
         )}
