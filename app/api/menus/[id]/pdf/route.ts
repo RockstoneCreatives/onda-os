@@ -31,10 +31,10 @@ interface MenuData {
   menu_sections: MenuSectionData[]
 }
 
-// PDF styles - matching menu preview exact specifications
+// PDF styles
 const styles = StyleSheet.create({
   page: {
-    padding: 60, // 20mm in points
+    padding: 60,
     fontSize: 10,
     backgroundColor: '#ffffff',
   },
@@ -44,11 +44,6 @@ const styles = StyleSheet.create({
     marginTop: 18,
     marginBottom: 12,
     color: '#000000',
-  },
-  glassBottleLabel: {
-    fontSize: 9,
-    marginBottom: 12,
-    color: '#666666',
   },
   countryHeader: {
     fontSize: 10,
@@ -64,12 +59,10 @@ const styles = StyleSheet.create({
     color: '#000000',
   },
   wineRow: {
-    marginBottom: 5,
-  },
-  wineNameRow: {
     flexDirection: 'row' as const,
     justifyContent: 'space-between',
     marginBottom: 5,
+    paddingBottom: 3,
   },
   wineNameText: {
     flex: 1,
@@ -108,147 +101,6 @@ async function fetchMenuData(menuId: string): Promise<MenuData> {
   return data as unknown as MenuData
 }
 
-// Create PDF document using createElement
-function createMenuPDF(menuData: MenuData) {
-  const sections = menuData.menu_sections.sort((a, b) => a.sort_order - b.sort_order)
-  const sectionOrderMap: Map<string, number> = new Map(
-    SECTION_ORDER.map((s, idx) => [s.display, idx])
-  )
-
-  const sortedSections = sections.sort((a, b) => {
-    const aIdx = sectionOrderMap.get(a.name as string) ?? 999
-    const bIdx = sectionOrderMap.get(b.name as string) ?? 999
-    return aIdx - bIdx
-  })
-
-  // Build page content
-  const pageElements: React.ReactElement[] = []
-
-  sortedSections.forEach((section) => {
-    const sectionWines = section.menu_items
-      .sort((a, b) => a.sort_order - b.sort_order)
-      .map((item) => ({ ...item.wines, sort_order: item.sort_order }))
-      .filter((w): w is WineWithSort => Boolean(w))
-
-    const useHierarchy = isHierarchical(
-      SECTION_ORDER.find((s) => s.display === section.name)?.key || ''
-    )
-
-    // Section header
-    pageElements.push(
-      React.createElement(Text, { key: `header-${section.id}`, style: styles.sectionHeader }, section.name)
-    )
-
-    if (useHierarchy && sectionWines.length > 0) {
-      const countryMap = new Map<string | null, Map<string | null, WineWithSort[]>>()
-
-      sectionWines.forEach((wine) => {
-        const country = wine.country || 'Unknown'
-        if (!countryMap.has(country)) {
-          countryMap.set(country, new Map())
-        }
-
-        const regionMap = countryMap.get(country)!
-        const region = wine.region || 'Other'
-        if (!regionMap.has(region)) {
-          regionMap.set(region, [])
-        }
-
-        regionMap.get(region)!.push(wine)
-      })
-
-      Array.from(countryMap.entries()).forEach(([country, regionMap]) => {
-        pageElements.push(
-          React.createElement(
-            Text,
-            { key: `country-${section.id}-${country}`, style: styles.countryHeader },
-            country
-          )
-        )
-
-        Array.from(regionMap.entries()).forEach(([region, wines]) => {
-          if (region !== 'Other') {
-            pageElements.push(
-              React.createElement(
-                Text,
-                { key: `region-${section.id}-${country}-${region}`, style: styles.regionHeader },
-                region
-              )
-            )
-          }
-
-          wines.forEach((wine) => {
-            pageElements.push(
-              React.createElement(
-                View,
-                { key: `wine-${wine.id}`, style: styles.wineRow },
-                React.createElement(
-                  View,
-                  { style: styles.wineNameRow },
-                  React.createElement(
-                    Text,
-                    { style: styles.wineNameText },
-                    `${wine.producer} – ${wine.name}${wine.vintage ? ` ${wine.vintage}` : ''}${wine.grapes ? ` – ${wine.grapes}` : ''}`
-                  ),
-                  React.createElement(
-                    Text,
-                    { style: styles.priceText },
-                    wine.btg && wine.glass_price ? wine.glass_price.toFixed(2) : ''
-                  ),
-                  React.createElement(
-                    Text,
-                    { style: styles.priceText },
-                    wine.sale_price ? Math.round(wine.sale_price).toString() : ''
-                  )
-                )
-              )
-            )
-          })
-        })
-      })
-    } else {
-      // Flat list (no hierarchy)
-      sectionWines.forEach((wine) => {
-        pageElements.push(
-          React.createElement(
-            View,
-            { key: `wine-${wine.id}`, style: styles.wineRow },
-            React.createElement(
-              View,
-              { style: styles.wineNameRow },
-              React.createElement(
-                Text,
-                { style: styles.wineNameText },
-                `${wine.producer} – ${wine.name}${wine.vintage ? ` ${wine.vintage}` : ''}${wine.grapes ? ` – ${wine.grapes}` : ''}`
-              ),
-              React.createElement(
-                Text,
-                { style: styles.priceText },
-                wine.btg && wine.glass_price ? wine.glass_price.toFixed(2) : ''
-              ),
-              React.createElement(
-                Text,
-                { style: styles.priceText },
-                wine.sale_price ? Math.round(wine.sale_price).toString() : ''
-              )
-            )
-          )
-        )
-      })
-    }
-  })
-
-  return React.createElement(
-    Document,
-    { title: `ONDA-Menu-${menuData.title}` },
-    React.createElement(
-      Page,
-      { size: 'A4', style: styles.page, wrap: false },
-      ...pageElements
-    )
-  )
-}
-
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -263,39 +115,184 @@ export async function GET(
       return NextResponse.json({ error: 'Menu not found' }, { status: 404 })
     }
 
-    console.log('[PDF] Menu found, creating PDF for:', menuData.title)
-    console.log('[PDF] Menu sections:', menuData.menu_sections?.length)
+    console.log('[PDF] Menu found:', menuData.title)
 
-    // Generate PDF
-    try {
-      const pdf = createMenuPDF(menuData)
-      console.log('[PDF] PDF document created successfully')
+    const sections = (menuData.menu_sections || [])
+      .sort((a, b) => a.sort_order - b.sort_order)
 
-      const buffer = await renderToBuffer(pdf)
-      console.log('[PDF] Buffer rendered, size:', buffer.length)
+    const sectionOrderMap: Map<string, number> = new Map(
+      SECTION_ORDER.map((s, idx) => [s.display, idx])
+    )
 
-      const filename = `ONDA-Menu-${menuData.title}-${new Date().toISOString().split('T')[0]}.pdf`
+    const sortedSections = sections.sort((a, b) => {
+      const aIdx = sectionOrderMap.get(a.name as string) ?? 999
+      const bIdx = sectionOrderMap.get(b.name as string) ?? 999
+      return aIdx - bIdx
+    })
 
-      return new NextResponse(buffer as any, {
-        headers: {
-          'Content-Type': 'application/pdf',
-          'Content-Disposition': `attachment; filename="${filename}"`,
-        },
-      })
-    } catch (pdfError) {
-      console.error('[PDF] PDF generation failed:', pdfError)
-      throw pdfError
-    }
+    console.log('[PDF] Rendering', sortedSections.length, 'sections')
+
+    // Build content
+    const content: React.ReactElement[] = []
+
+    sortedSections.forEach((section) => {
+      const sectionWines = (section.menu_items || [])
+        .sort((a, b) => a.sort_order - b.sort_order)
+        .map((item) => item.wines ? { ...item.wines, sort_order: item.sort_order } : null)
+        .filter((w): w is WineWithSort => w !== null)
+
+      const sectionKey = SECTION_ORDER.find((s) => s.display === section.name)?.key || ''
+      const useHierarchy = isHierarchical(sectionKey)
+
+      // Section header
+      content.push(
+        React.createElement(
+          Text,
+          { key: `header-${section.id}`, style: styles.sectionHeader },
+          section.name
+        )
+      )
+
+      if (useHierarchy && sectionWines.length > 0) {
+        const countryMap = new Map<string, Map<string, WineWithSort[]>>()
+
+        sectionWines.forEach((wine) => {
+          const country = wine.country || 'Unknown'
+          if (!countryMap.has(country)) {
+            countryMap.set(country, new Map())
+          }
+          const regionMap = countryMap.get(country)!
+          const region = wine.region || 'Other'
+          if (!regionMap.has(region)) {
+            regionMap.set(region, [])
+          }
+          regionMap.get(region)!.push(wine)
+        })
+
+        Array.from(countryMap.entries()).forEach(([country, regionMap]) => {
+          content.push(
+            React.createElement(
+              Text,
+              { key: `country-${section.id}-${country}`, style: styles.countryHeader },
+              country
+            )
+          )
+
+          Array.from(regionMap.entries()).forEach(([region, wines]) => {
+            if (region !== 'Other') {
+              content.push(
+                React.createElement(
+                  Text,
+                  { key: `region-${section.id}-${country}-${region}`, style: styles.regionHeader },
+                  region
+                )
+              )
+            }
+
+            wines.forEach((wine) => {
+              content.push(
+                React.createElement(
+                  View,
+                  { key: `wine-${section.id}-${wine.id}`, style: styles.wineRow },
+                  React.createElement(
+                    Text,
+                    { style: styles.wineNameText },
+                    `${wine.producer} – ${wine.name}${wine.vintage ? ` ${wine.vintage}` : ''}${wine.grapes ? ` – ${wine.grapes}` : ''}`
+                  ),
+                  React.createElement(
+                    Text,
+                    { style: styles.priceText },
+                    wine.glass_price ? Math.round(wine.glass_price).toString() : ''
+                  ),
+                  React.createElement(
+                    Text,
+                    { style: styles.priceText },
+                    wine.sale_price ? Math.round(wine.sale_price).toString() : ''
+                  )
+                )
+              )
+            })
+          })
+        })
+      } else {
+        // Non-hierarchical
+        const regionMap = new Map<string, WineWithSort[]>()
+        sectionWines.forEach((wine) => {
+          const region = wine.country || wine.region || 'Other'
+          if (!regionMap.has(region)) {
+            regionMap.set(region, [])
+          }
+          regionMap.get(region)!.push(wine)
+        })
+
+        Array.from(regionMap.entries()).forEach(([region, wines]) => {
+          content.push(
+            React.createElement(
+              Text,
+              { key: `region-${section.id}-${region}`, style: styles.regionHeader },
+              region
+            )
+          )
+
+          wines.forEach((wine) => {
+            content.push(
+              React.createElement(
+                View,
+                { key: `wine-${section.id}-${wine.id}`, style: styles.wineRow },
+                React.createElement(
+                  Text,
+                  { style: styles.wineNameText },
+                  `${wine.producer} – ${wine.name}${wine.vintage ? ` ${wine.vintage}` : ''}${wine.grapes ? ` – ${wine.grapes}` : ''}`
+                ),
+                React.createElement(
+                  Text,
+                  { style: styles.priceText },
+                  wine.glass_price ? Math.round(wine.glass_price).toString() : ''
+                ),
+                React.createElement(
+                  Text,
+                  { style: styles.priceText },
+                  wine.sale_price ? Math.round(wine.sale_price).toString() : ''
+                )
+              )
+            )
+          })
+        })
+      }
+    })
+
+    console.log('[PDF] Content built, rendering to buffer')
+
+    const pdfDocument = React.createElement(
+      Document,
+      { title: `ONDA-Menu-${menuData.title}` },
+      React.createElement(
+        Page,
+        { size: 'A4', style: styles.page },
+        ...content
+      )
+    )
+
+    const buffer = await renderToBuffer(pdfDocument)
+    console.log('[PDF] Buffer created, size:', buffer.length)
+
+    const filename = `ONDA-Menu-${menuData.title}-${new Date().toISOString().split('T')[0]}.pdf`
+
+    return new NextResponse(buffer as any, {
+      headers: {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `attachment; filename="${filename}"`,
+      },
+    })
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : 'Unknown error'
-    const errorStack = error instanceof Error ? error.stack : ''
-    console.error('[PDF] Error:', errorMsg, errorStack)
+    console.error('[PDF] Error:', errorMsg)
+    if (error instanceof Error) {
+      console.error('[PDF] Stack:', error.stack)
+    }
 
     return NextResponse.json(
-      {
-        error: errorMsg,
-        details: process.env.NODE_ENV === 'development' ? errorStack : undefined
-      },
+      { error: errorMsg },
       { status: 500 }
     )
   }
