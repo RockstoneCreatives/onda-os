@@ -14,7 +14,7 @@ const config: Config = {
           "red-dark": "#962d22",
           blue: "#2563EB",
           primary: "#1a1a1a",
-          50: "#FFF8F8",
+          50: "#FFFFFF",
           100: "#FFE4E4",
           200: "#FECACA",
           500: "#6B6B6B",
