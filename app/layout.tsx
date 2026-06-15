@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Barlow_Condensed } from "next/font/google";
+import { Inter } from "next/font/google";
+import { Sidebar } from "@/components/sidebar";
 import { Footer } from "@/components/footer";
 import { Toaster } from "sonner";
 import "./globals.css";
 
-const barlowCondensed = Barlow_Condensed({
-  variable: "--font-barlow-condensed",
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
@@ -21,10 +21,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${barlowCondensed.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col font-condensed">
-        {children}
-        <Footer />
+    <html lang="en" className={`${inter.variable} h-full`}>
+      <body className="min-h-screen bg-slate-50 flex">
+        <Sidebar />
+        <div className="flex-1 flex flex-col">
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </div>
         <Toaster richColors />
       </body>
     </html>

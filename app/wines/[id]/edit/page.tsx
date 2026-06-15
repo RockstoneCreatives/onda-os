@@ -51,10 +51,10 @@ export default function EditWinePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="ml-64 min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-onda-accent mx-auto"></div>
-          <p className="mt-4 text-slate-600">Loading wine...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-onda-accent mx-auto"></div>
+          <p className="mt-4 text-slate-500">Loading wine...</p>
         </div>
       </div>
     )
@@ -62,10 +62,10 @@ export default function EditWinePage() {
 
   if (!wine) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="ml-64 min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-slate-600 mb-4">Wine not found</p>
-          <Link href="/wines" className="text-onda-accent hover:underline font-medium">
+          <Link href="/wines" className="text-onda-accent hover:opacity-80 font-medium">
             Back to Wines
           </Link>
         </div>
@@ -74,18 +74,20 @@ export default function EditWinePage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <header className="bg-white border-b border-onda-border">
-        <div className="max-w-3xl mx-auto px-6 py-4 flex justify-between items-center">
-          <Link href="/wines" className="text-onda-accent font-bold text-lg hover:opacity-80">
+    <div className="ml-64 min-h-screen bg-slate-50">
+      {/* Header */}
+      <div className="border-b border-slate-200 bg-white sticky top-0 z-10">
+        <div className="px-8 py-4 flex justify-between items-center">
+          <Link href="/wines" className="text-onda-accent font-medium hover:opacity-80">
             ← Back to Wines
           </Link>
           <h1 className="text-2xl font-bold text-slate-900">Edit Wine</h1>
-          <div className="w-32"></div>
+          <div className="w-24"></div>
         </div>
-      </header>
+      </div>
 
-      <main className="max-w-3xl mx-auto px-6 py-8">
+      {/* Content */}
+      <main className="max-w-3xl mx-auto px-8 py-8">
         <WineForm wine={wine} isEditing />
       </main>
     </div>

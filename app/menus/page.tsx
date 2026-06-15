@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase/client'
 import { toast } from 'sonner'
-import { Nav } from '@/components/nav'
 import type { Database } from '@/lib/supabase/client'
 
 type Menu = Database['public']['Tables']['menus']['Row']
@@ -59,56 +58,57 @@ export default function MenusPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <Nav currentPage="menus" />
+    <div className="ml-64 min-h-screen bg-slate-50">
+      {/* Header */}
+      <div className="border-b border-slate-200 bg-white">
+        <div className="px-8 py-6">
+          <h1 className="text-3xl font-bold text-slate-900">Menus</h1>
+          <p className="text-slate-500 mt-1">View and manage your created menus.</p>
+        </div>
+      </div>
 
-      <main className="pt-24 max-w-6xl mx-auto px-6 pb-12">
-        <h1 className="font-condensed font-bold uppercase text-5xl text-onda-accent mb-8">
-          Menu History
-        </h1>
-
+      {/* Content */}
+      <div className="p-8">
         {loading ? (
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-onda-accent mx-auto"></div>
-            <p className="mt-4 text-onda-muted font-condensed">Loading menus...</p>
+            <div className="inline-block">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-onda-accent"></div>
+            </div>
+            <p className="mt-4 text-slate-500">Loading menus...</p>
           </div>
         ) : menus.length === 0 ? (
-          <div className="border border-onda-border p-8 text-center">
-            <p className="text-onda-text font-condensed mb-6">No menus created yet</p>
+          <div className="bg-white rounded-lg border border-slate-200 p-8 text-center shadow-xs">
+            <p className="text-slate-600 mb-6">No menus created yet</p>
             <Link
               href="/menus/new"
-              className="inline-block px-4 py-2 bg-onda-accent text-white font-condensed font-bold uppercase text-sm hover:opacity-85 transition"
+              className="inline-block px-4 py-2 bg-onda-accent text-white rounded-lg font-medium hover:opacity-90 transition"
             >
               Create Your First Menu
             </Link>
           </div>
         ) : (
-          <div className="border border-onda-border">
-            {menus.map((menu, idx) => (
+          <div className="space-y-4">
+            {menus.map((menu) => (
               <div
                 key={menu.id}
-                className={`flex justify-between items-center px-4 py-4 ${
-                  idx !== menus.length - 1 ? 'border-b border-onda-border' : ''
-                } hover:bg-onda-surface transition`}
+                className="bg-white rounded-lg border border-slate-200 p-6 shadow-xs hover:shadow-md transition flex justify-between items-center"
               >
                 <div>
-                  <p className="font-condensed font-bold text-onda-text">
-                    {menu.title}
-                  </p>
-                  <p className="font-condensed text-sm text-onda-muted mt-1">
+                  <h3 className="font-semibold text-slate-900">{menu.title}</h3>
+                  <p className="text-sm text-slate-500 mt-1">
                     {new Date(menu.created_at).toLocaleDateString()}
                   </p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-3">
                   <Link
                     href={`/menus/${menu.id}`}
-                    className="px-3 py-2 border border-onda-border text-onda-accent font-condensed font-bold uppercase text-xs hover:bg-onda-surface transition"
+                    className="px-4 py-2 bg-onda-accent text-white rounded-lg font-medium text-sm hover:opacity-90 transition"
                   >
                     Open
                   </Link>
                   <button
                     onClick={() => handleDelete(menu.id)}
-                    className="px-3 py-2 border border-red-300 text-red-600 font-condensed font-bold uppercase text-xs hover:bg-red-50 transition"
+                    className="px-4 py-2 border border-red-200 text-red-600 rounded-lg font-medium text-sm hover:bg-red-50 transition"
                   >
                     Delete
                   </button>
@@ -117,7 +117,7 @@ export default function MenusPage() {
             ))}
           </div>
         )}
-      </main>
+      </div>
     </div>
   )
 }

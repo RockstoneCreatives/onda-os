@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase/client'
 import { toast } from 'sonner'
-import { Nav } from '@/components/nav'
 
 interface Stats {
   totalWines: number
@@ -27,30 +26,18 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        // Check auth
-        const {
-          data: { session },
-          error: authError,
-        } = await supabase.auth.getSession()
+        const { data: { session }, error: authError } = await supabase.auth.getSession()
         if (authError || !session) {
           router.push('/login')
           return
         }
 
-        // Fetch wine counts
-        const [allWines, activeWinesResp, inactiveWinesResp, menusResp] =
-          await Promise.all([
-            supabase.from('wines').select('id', { count: 'exact' }),
-            supabase
-              .from('wines')
-              .select('id', { count: 'exact' })
-              .eq('status', 'Active'),
-            supabase
-              .from('wines')
-              .select('id', { count: 'exact' })
-              .eq('status', 'Inactive'),
-            supabase.from('menus').select('id', { count: 'exact' }),
-          ])
+        const [allWines, activeWinesResp, inactiveWinesResp, menusResp] = await Promise.all([
+          supabase.from('wines').select('id', { count: 'exact' }),
+          supabase.from('wines').select('id', { count: 'exact' }).eq('status', 'Active'),
+          supabase.from('wines').select('id', { count: 'exact' }).eq('status', 'Inactive'),
+          supabase.from('menus').select('id', { count: 'exact' }),
+        ])
 
         setStats({
           totalWines: allWines.count || 0,
@@ -71,103 +58,99 @@ export default function DashboardPage() {
   }, [router])
 
   return (
-    <div className="min-h-screen bg-white">
-      <Nav />
+    <div className="ml-64 min-h-screen bg-slate-50">
+      {/* Header */}
+      <div className="border-b border-slate-200 bg-white">
+        <div className="px-8 py-6">
+          <h1 className="text-3xl font-bold text-slate-900">Dashboard</h1>
+          <p className="text-slate-500 mt-1">Welcome to Onda OS. Manage your wine inventory and menus.</p>
+        </div>
+      </div>
 
-      <main className="pt-24 max-w-6xl mx-auto px-6 pb-12">
+      {/* Content */}
+      <div className="p-8">
         {loading ? (
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-onda-accent mx-auto"></div>
-            <p className="mt-4 text-onda-muted font-condensed">Loading dashboard...</p>
+            <div className="inline-block">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-onda-accent"></div>
+            </div>
+            <p className="mt-4 text-slate-500">Loading dashboard...</p>
           </div>
         ) : (
           <>
-            {/* Main Heading */}
-            <h1 className="font-condensed font-bold uppercase text-5xl text-onda-accent mb-12">
-              Dashboard
-            </h1>
-
-            {/* Stats Row */}
-            <div className="flex gap-8 mb-16 border-b border-onda-border pb-8">
-              <div>
-                <p className="font-condensed uppercase text-sm text-onda-muted tracking-wide">Total Wines</p>
-                <p className="font-condensed font-bold text-4xl text-onda-accent mt-1">
-                  {stats.totalWines}
-                </p>
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-xs hover:shadow-md transition">
+                <p className="text-sm font-medium text-slate-600">Total Wines</p>
+                <p className="text-3xl font-bold text-slate-900 mt-2">{stats.totalWines}</p>
               </div>
-              <div>
-                <p className="font-condensed uppercase text-sm text-onda-muted tracking-wide">Active</p>
-                <p className="font-condensed font-bold text-4xl text-onda-text mt-1">
-                  {stats.activeWines}
-                </p>
+              <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-xs hover:shadow-md transition">
+                <p className="text-sm font-medium text-slate-600">Active Wines</p>
+                <p className="text-3xl font-bold text-green-600 mt-2">{stats.activeWines}</p>
               </div>
-              <div>
-                <p className="font-condensed uppercase text-sm text-onda-muted tracking-wide">Inactive</p>
-                <p className="font-condensed font-bold text-4xl text-onda-text mt-1">
-                  {stats.inactiveWines}
-                </p>
+              <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-xs hover:shadow-md transition">
+                <p className="text-sm font-medium text-slate-600">Inactive Wines</p>
+                <p className="text-3xl font-bold text-slate-900 mt-2">{stats.inactiveWines}</p>
               </div>
-              <div>
-                <p className="font-condensed uppercase text-sm text-onda-muted tracking-wide">Menus</p>
-                <p className="font-condensed font-bold text-4xl text-onda-text mt-1">
-                  {stats.menusCreated}
-                </p>
+              <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-xs hover:shadow-md transition">
+                <p className="text-sm font-medium text-slate-600">Menus Created</p>
+                <p className="text-3xl font-bold text-onda-accent mt-2">{stats.menusCreated}</p>
               </div>
             </div>
 
             {/* Quick Actions */}
-            <div className="space-y-8">
-              {/* Wine Management */}
-              <div>
-                <h2 className="font-condensed font-bold uppercase text-2xl text-onda-accent mb-4">
-                  Wine Management
-                </h2>
-                <p className="text-onda-text font-condensed mb-4 max-w-2xl">
-                  Browse, add, edit, and manage your wine inventory with all details from the master list.
-                </p>
-                <Link
-                  href="/wines"
-                  className="inline-block font-condensed font-bold uppercase text-onda-accent hover:text-onda-text transition"
-                >
-                  Browse Wine List →
-                </Link>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Browse Wines */}
+              <Link href="/wines" className="group">
+                <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-xs hover:shadow-md transition cursor-pointer">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center text-xl">🍷</div>
+                  </div>
+                  <h3 className="text-lg font-semibold text-slate-900 group-hover:text-onda-accent transition">Browse Wines</h3>
+                  <p className="text-slate-600 text-sm mt-2">
+                    View, search, and manage your complete wine inventory with all details from the master list.
+                  </p>
+                  <p className="text-onda-accent text-sm font-medium mt-4 group-hover:translate-x-1 transition">
+                    Get started →
+                  </p>
+                </div>
+              </Link>
 
-              {/* Menu Builder */}
-              <div>
-                <h2 className="font-condensed font-bold uppercase text-2xl text-onda-accent mb-4">
-                  Create Menu
-                </h2>
-                <p className="text-onda-text font-condensed mb-4 max-w-2xl">
-                  Build a new menu by selecting wines. They'll automatically group by style and country for the PDF export.
-                </p>
-                <Link
-                  href="/menus/new"
-                  className="inline-block font-condensed font-bold uppercase text-onda-accent hover:text-onda-text transition"
-                >
-                  Create New Menu →
-                </Link>
-              </div>
+              {/* Create Menu */}
+              <Link href="/menus/new" className="group">
+                <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-xs hover:shadow-md transition cursor-pointer">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="h-10 w-10 rounded-lg bg-red-100 flex items-center justify-center text-xl">📋</div>
+                  </div>
+                  <h3 className="text-lg font-semibold text-slate-900 group-hover:text-onda-accent transition">Create Menu</h3>
+                  <p className="text-slate-600 text-sm mt-2">
+                    Build a new menu by selecting wines. They'll automatically organize and export as PDF.
+                  </p>
+                  <p className="text-onda-accent text-sm font-medium mt-4 group-hover:translate-x-1 transition">
+                    Create new →
+                  </p>
+                </div>
+              </Link>
 
               {/* Menu History */}
-              <div>
-                <h2 className="font-condensed font-bold uppercase text-2xl text-onda-accent mb-4">
-                  Menu History
-                </h2>
-                <p className="text-onda-text font-condensed mb-4 max-w-2xl">
-                  View and export menus you've created previously. Re-export PDFs or create variations.
-                </p>
-                <Link
-                  href="/menus"
-                  className="inline-block font-condensed font-bold uppercase text-onda-accent hover:text-onda-text transition"
-                >
-                  View Menu History →
-                </Link>
-              </div>
+              <Link href="/menus" className="group">
+                <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-xs hover:shadow-md transition cursor-pointer">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="h-10 w-10 rounded-lg bg-green-100 flex items-center justify-center text-xl">📁</div>
+                  </div>
+                  <h3 className="text-lg font-semibold text-slate-900 group-hover:text-onda-accent transition">Menu History</h3>
+                  <p className="text-slate-600 text-sm mt-2">
+                    View, edit, and export all menus you've created. Download PDFs or create variations.
+                  </p>
+                  <p className="text-onda-accent text-sm font-medium mt-4 group-hover:translate-x-1 transition">
+                    Browse menus →
+                  </p>
+                </div>
+              </Link>
             </div>
           </>
         )}
-      </main>
+      </div>
     </div>
   )
 }

@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase/client'
 import { toast } from 'sonner'
-import { Nav } from '@/components/nav'
 import type { Database } from '@/lib/supabase/client'
 
 type Wine = Database['public']['Tables']['wines']['Row']
@@ -19,25 +18,12 @@ const ALL_COLUMNS: { key: ColumnKey; label: string }[] = [
   { key: 'country', label: 'Country' },
   { key: 'region', label: 'Region' },
   { key: 'grapes', label: 'Grapes' },
-  { key: 'btg', label: 'BTG' },
-  { key: 'cost_price', label: 'Cost' },
   { key: 'sale_price', label: 'Sale Price' },
   { key: 'glass_price', label: 'Glass Price' },
-  { key: 'importer', label: 'Importer' },
-  { key: 'inventory_location', label: 'Location' },
   { key: 'status', label: 'Status' },
 ]
 
-const DEFAULT_COLUMNS: ColumnKey[] = [
-  'producer',
-  'name',
-  'vintage',
-  'colour_style',
-  'country',
-  'sale_price',
-  'glass_price',
-  'status',
-]
+const DEFAULT_COLUMNS: ColumnKey[] = ['producer', 'name', 'vintage', 'colour_style', 'country', 'sale_price', 'status']
 
 export default function WinesPage() {
   const router = useRouter()
@@ -46,23 +32,17 @@ export default function WinesPage() {
   const [showInactive, setShowInactive] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterColour, setFilterColour] = useState('')
-  const [filterCountry, setFilterCountry] = useState('')
   const [visibleColumns, setVisibleColumns] = useState<ColumnKey[]>(DEFAULT_COLUMNS)
 
-  // Load from localStorage on mount
   useEffect(() => {
     const saved = localStorage.getItem('wine-list-columns')
     if (saved) {
       try {
-        const parsed = JSON.parse(saved) as ColumnKey[]
-        setVisibleColumns(parsed)
-      } catch {
-        // Ignore parse errors
-      }
+        setVisibleColumns(JSON.parse(saved) as ColumnKey[])
+      } catch {}
     }
   }, [])
 
-  // Fetch wines
   useEffect(() => {
     const fetchWines = async () => {
       try {
@@ -76,7 +56,6 @@ export default function WinesPage() {
           .from('wines')
           .select('*')
           .order('colour_style', { ascending: true })
-          .order('country', { ascending: true })
           .order('producer', { ascending: true })
 
         if (error) throw error
@@ -97,26 +76,17 @@ export default function WinesPage() {
     return Array.from(new Set(wines.map((w) => w.colour_style))).sort()
   }, [wines])
 
-  const countries = useMemo(() => {
-    const countrySet = new Set(wines.map((w) => w.country).filter(Boolean))
-    return Array.from(countrySet).sort() as string[]
-  }, [wines])
-
   const filteredWines = useMemo(() => {
     return wines.filter((wine) => {
       const statusMatch = showInactive ? true : wine.status === 'Active'
       const searchMatch =
         searchTerm === '' ||
         wine.producer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        wine.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (wine.country?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false)
-
+        wine.name.toLowerCase().includes(searchTerm.toLowerCase())
       const colourMatch = filterColour === '' || wine.colour_style === filterColour
-      const countryMatch = filterCountry === '' || wine.country === filterCountry
-
-      return statusMatch && searchMatch && colourMatch && countryMatch
+      return statusMatch && searchMatch && colourMatch
     })
-  }, [wines, showInactive, searchTerm, filterColour, filterCountry])
+  }, [wines, showInactive, searchTerm, filterColour])
 
   const handleToggleColumn = (col: ColumnKey) => {
     const updated = visibleColumns.includes(col)
@@ -130,165 +100,134 @@ export default function WinesPage() {
     const value = wine[key]
     if (value === null || value === undefined) return '—'
     if (key === 'btg') return (value as boolean) ? 'Yes' : 'No'
-    if (key === 'sale_price' || key === 'glass_price' || key === 'cost_price') {
-      return `€${(value as number).toFixed(2)}`
-    }
+    if (key === 'sale_price' || key === 'glass_price') return `€${(value as number).toFixed(2)}`
     return String(value)
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <Nav currentPage="wines" />
+    <div className="ml-64 min-h-screen bg-slate-50">
+      {/* Header */}
+      <div className="border-b border-slate-200 bg-white sticky top-0 z-10">
+        <div className="px-8 py-6 flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900">Wine List</h1>
+            <p className="text-slate-500 mt-1">{filteredWines.length} wines</p>
+          </div>
+          <Link
+            href="/wines/new"
+            className="px-4 py-2 bg-onda-accent text-white rounded-lg hover:bg-onda-600 transition font-medium text-sm shadow-sm"
+          >
+            + Add Wine
+          </Link>
+        </div>
+      </div>
 
-      <main className="pt-24 max-w-6xl mx-auto px-6 pb-12">
+      {/* Content */}
+      <div className="p-8">
         {loading ? (
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-onda-accent mx-auto"></div>
-            <p className="mt-4 text-onda-muted font-condensed">Loading wines...</p>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-onda-accent"></div>
+            <p className="mt-4 text-slate-500">Loading wines...</p>
           </div>
         ) : (
           <>
-            {/* Page Title */}
-            <h1 className="font-condensed font-bold uppercase text-5xl text-onda-accent mb-8">
-              Wine List
-            </h1>
-
-            {/* Controls */}
-            <div className="mb-8 space-y-4">
-              {/* Search and Filters Row */}
-              <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
-                <input
-                  type="text"
-                  placeholder="Search by producer, name, country..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="flex-1 px-3 py-2 border border-onda-border bg-white font-condensed text-sm focus:outline-none focus:border-onda-accent"
-                />
-                <select
-                  value={filterColour}
-                  onChange={(e) => setFilterColour(e.target.value)}
-                  className="px-3 py-2 border border-onda-border bg-white font-condensed text-sm focus:outline-none focus:border-onda-accent"
-                >
-                  <option value="">All Styles</option>
-                  {colours.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
-                </select>
-                <select
-                  value={filterCountry}
-                  onChange={(e) => setFilterCountry(e.target.value)}
-                  className="px-3 py-2 border border-onda-border bg-white font-condensed text-sm focus:outline-none focus:border-onda-accent"
-                >
-                  <option value="">All Countries</option>
-                  {countries.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Status and Actions Row */}
-              <div className="flex justify-between items-center">
-                <label className="flex items-center gap-2 font-condensed text-sm">
+            {/* Filters */}
+            <div className="bg-white rounded-lg border border-slate-200 p-4 mb-6 shadow-xs">
+              <div className="flex gap-4 items-end">
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Search</label>
+                  <input
+                    type="text"
+                    placeholder="Search by producer or name..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent"
+                  />
+                </div>
+                <div className="w-48">
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Style</label>
+                  <select
+                    value={filterColour}
+                    onChange={(e) => setFilterColour(e.target.value)}
+                    className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent"
+                  >
+                    <option value="">All Styles</option>
+                    {colours.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <label className="flex items-center gap-2 text-sm">
                   <input
                     type="checkbox"
                     checked={showInactive}
                     onChange={(e) => setShowInactive(e.target.checked)}
                     className="w-4 h-4"
                   />
-                  Show Inactive
+                  <span className="text-slate-700 font-medium">Show Inactive</span>
                 </label>
-
-                <div className="flex gap-2">
-                  <details className="font-condensed text-sm">
-                    <summary className="cursor-pointer text-onda-accent hover:text-onda-text transition uppercase font-bold">
-                      Columns
-                    </summary>
-                    <div className="absolute bg-white border border-onda-border mt-2 p-3 space-y-2 z-50 min-w-40">
-                      {ALL_COLUMNS.map((col) => (
-                        <label key={col.key} className="flex items-center gap-2 text-sm cursor-pointer">
-                          <input
-                            type="checkbox"
-                            checked={visibleColumns.includes(col.key)}
-                            onChange={() => handleToggleColumn(col.key)}
-                            className="w-4 h-4"
-                          />
-                          {col.label}
-                        </label>
-                      ))}
-                    </div>
-                  </details>
-                  <Link
-                    href="/wines/new"
-                    className="px-3 py-2 bg-onda-accent text-white font-condensed font-bold uppercase text-sm hover:opacity-85 transition"
-                  >
-                    + Add Wine
-                  </Link>
-                </div>
               </div>
             </div>
 
-            {/* Wine Count */}
-            <p className="text-onda-muted font-condensed text-sm mb-4">
-              {filteredWines.length} wine{filteredWines.length !== 1 ? 's' : ''} shown
-            </p>
-
             {/* Table */}
-            <div className="border border-onda-border">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-onda-border">
-                    {visibleColumns.map((col) => (
-                      <th
-                        key={col}
-                        className="text-left px-4 py-3 font-condensed font-bold uppercase text-xs text-onda-text bg-white"
-                      >
-                        {ALL_COLUMNS.find((c) => c.key === col)?.label}
-                      </th>
-                    ))}
-                    <th className="text-left px-4 py-3 font-condensed font-bold uppercase text-xs text-onda-text bg-white w-20">
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredWines.map((wine, idx) => (
-                    <tr key={wine.id} className="border-b border-onda-border hover:bg-onda-surface transition">
-                      {visibleColumns.map((col) => {
-                        let cellClass = 'px-4 py-2 text-sm font-condensed'
-                        if (col === 'producer') cellClass += ' font-bold text-onda-text'
-                        else if (col === 'status')
-                          cellClass +=
-                            wine.status === 'Active'
-                              ? ' text-green-600 font-bold'
-                              : ' text-red-600 font-bold'
-                        else cellClass += ' text-onda-muted'
-
-                        return (
-                          <td key={col} className={cellClass}>
-                            {getDisplayValue(wine, col)}
-                          </td>
-                        )
-                      })}
-                      <td className="px-4 py-2 text-sm">
-                        <Link
-                          href={`/wines/${wine.id}/edit`}
-                          className="text-onda-accent font-condensed font-bold hover:text-onda-text transition uppercase"
+            <div className="bg-white rounded-lg border border-slate-200 shadow-xs overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-slate-200 bg-slate-50">
+                      {visibleColumns.map((col) => (
+                        <th
+                          key={col}
+                          className="text-left px-6 py-3 font-semibold text-xs text-slate-700 uppercase tracking-wider"
                         >
-                          Edit
-                        </Link>
-                      </td>
+                          {ALL_COLUMNS.find((c) => c.key === col)?.label}
+                        </th>
+                      ))}
+                      <th className="text-left px-6 py-3 font-semibold text-xs text-slate-700 uppercase tracking-wider w-16">
+                        Action
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {filteredWines.map((wine) => (
+                      <tr
+                        key={wine.id}
+                        className="border-b border-slate-200 hover:bg-slate-50 transition"
+                      >
+                        {visibleColumns.map((col) => {
+                          let cellClass = 'px-6 py-4 text-sm'
+                          if (col === 'producer') cellClass += ' font-semibold text-slate-900'
+                          else if (col === 'status') {
+                            cellClass += wine.status === 'Active'
+                              ? ' text-green-600 font-medium'
+                              : ' text-red-600 font-medium'
+                          } else cellClass += ' text-slate-600'
+
+                          return (
+                            <td key={col} className={cellClass}>
+                              {getDisplayValue(wine, col)}
+                            </td>
+                          )
+                        })}
+                        <td className="px-6 py-4 text-sm">
+                          <Link
+                            href={`/wines/${wine.id}/edit`}
+                            className="text-onda-accent hover:text-onda-600 font-medium transition"
+                          >
+                            Edit
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </>
         )}
-      </main>
+      </div>
     </div>
   )
 }

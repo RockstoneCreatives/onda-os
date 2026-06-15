@@ -20,18 +20,20 @@ export default function AddWinePage() {
   }, [router])
 
   return (
-    <div className="min-h-screen bg-white">
-      <header className="bg-white border-b border-onda-border">
-        <div className="max-w-3xl mx-auto px-6 py-4 flex justify-between items-center">
-          <Link href="/wines" className="text-onda-accent font-bold text-lg hover:opacity-80">
+    <div className="ml-64 min-h-screen bg-slate-50">
+      {/* Header */}
+      <div className="border-b border-slate-200 bg-white sticky top-0 z-10">
+        <div className="px-8 py-4 flex justify-between items-center">
+          <Link href="/wines" className="text-onda-accent font-medium hover:opacity-80">
             ← Back to Wines
           </Link>
           <h1 className="text-2xl font-bold text-slate-900">Add New Wine</h1>
-          <div className="w-32"></div>
+          <div className="w-24"></div>
         </div>
-      </header>
+      </div>
 
-      <main className="max-w-3xl mx-auto px-6 py-8">
+      {/* Content */}
+      <main className="max-w-3xl mx-auto px-8 py-8">
         <WineForm />
       </main>
     </div>

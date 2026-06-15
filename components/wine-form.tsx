@@ -110,16 +110,16 @@ export function WineForm({ wine, isEditing = false }: WineFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8 max-w-2xl">
+    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
       {/* Wine Details Section */}
-      <div className="border border-onda-border">
-        <h2 className="font-condensed font-bold uppercase text-onda-accent text-lg px-4 py-3 border-b border-onda-border bg-white">
-          Wine Details
-        </h2>
-        <div className="p-4 space-y-4">
+      <div className="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-xs">
+        <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+          <h2 className="font-semibold text-lg text-slate-900">Wine Details</h2>
+        </div>
+        <div className="p-6 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block font-condensed font-bold uppercase text-xs text-onda-muted mb-2">
+              <label className="block text-sm font-medium text-slate-700 mb-2">
                 Style <span className="text-red-500">*</span>
               </label>
               <select
@@ -127,7 +127,7 @@ export function WineForm({ wine, isEditing = false }: WineFormProps) {
                 onChange={(e) => setForm({ ...form, colour_style: e.target.value })}
                 required
                 disabled={loading}
-                className="w-full px-3 py-2 border border-onda-border bg-white font-condensed focus:outline-none focus:border-onda-accent"
+                className="w-full px-3 py-2 border border-slate-200 bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent"
               >
                 <option value="">Select style...</option>
                 {COLOUR_STYLES.map((style) => (
@@ -138,7 +138,7 @@ export function WineForm({ wine, isEditing = false }: WineFormProps) {
               </select>
             </div>
             <div>
-              <label className="block font-condensed font-bold uppercase text-xs text-onda-muted mb-2">
+              <label className="block text-sm font-medium text-slate-700 mb-2">
                 Country
               </label>
               <input
@@ -146,11 +146,11 @@ export function WineForm({ wine, isEditing = false }: WineFormProps) {
                 value={form.country}
                 onChange={(e) => setForm({ ...form, country: e.target.value })}
                 disabled={loading}
-                className="w-full px-3 py-2 border border-onda-border bg-white font-condensed focus:outline-none focus:border-onda-accent"
+                className="w-full px-3 py-2 border border-slate-200 bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent"
               />
             </div>
             <div>
-              <label className="block font-condensed font-bold uppercase text-xs text-onda-muted mb-2">
+              <label className="block text-sm font-medium text-slate-700 mb-2">
                 Region
               </label>
               <input
@@ -158,11 +158,11 @@ export function WineForm({ wine, isEditing = false }: WineFormProps) {
                 value={form.region}
                 onChange={(e) => setForm({ ...form, region: e.target.value })}
                 disabled={loading}
-                className="w-full px-3 py-2 border border-onda-border bg-white font-condensed focus:outline-none focus:border-onda-accent"
+                className="w-full px-3 py-2 border border-slate-200 bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent"
               />
             </div>
             <div>
-              <label className="block font-condensed font-bold uppercase text-xs text-onda-muted mb-2">
+              <label className="block text-sm font-medium text-slate-700 mb-2">
                 Producer <span className="text-red-500">*</span>
               </label>
               <input
@@ -171,11 +171,11 @@ export function WineForm({ wine, isEditing = false }: WineFormProps) {
                 onChange={(e) => setForm({ ...form, producer: e.target.value })}
                 required
                 disabled={loading}
-                className="w-full px-3 py-2 border border-onda-border bg-white font-condensed focus:outline-none focus:border-onda-accent"
+                className="w-full px-3 py-2 border border-slate-200 bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent"
               />
             </div>
             <div className="md:col-span-2">
-              <label className="block font-condensed font-bold uppercase text-xs text-onda-muted mb-2">
+              <label className="block text-sm font-medium text-slate-700 mb-2">
                 Wine Name <span className="text-red-500">*</span>
               </label>
               <input
@@ -184,11 +184,11 @@ export function WineForm({ wine, isEditing = false }: WineFormProps) {
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 required
                 disabled={loading}
-                className="w-full px-3 py-2 border border-onda-border bg-white font-condensed focus:outline-none focus:border-onda-accent"
+                className="w-full px-3 py-2 border border-slate-200 bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent"
               />
             </div>
             <div>
-              <label className="block font-condensed font-bold uppercase text-xs text-onda-muted mb-2">
+              <label className="block text-sm font-medium text-slate-700 mb-2">
                 Vintage
               </label>
               <input
@@ -196,11 +196,11 @@ export function WineForm({ wine, isEditing = false }: WineFormProps) {
                 value={form.vintage}
                 onChange={(e) => setForm({ ...form, vintage: e.target.value })}
                 disabled={loading}
-                className="w-full px-3 py-2 border border-onda-border bg-white font-condensed focus:outline-none focus:border-onda-accent"
+                className="w-full px-3 py-2 border border-slate-200 bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent"
               />
             </div>
             <div>
-              <label className="block font-condensed font-bold uppercase text-xs text-onda-muted mb-2">
+              <label className="block text-sm font-medium text-slate-700 mb-2">
                 Grapes
               </label>
               <input
@@ -208,11 +208,11 @@ export function WineForm({ wine, isEditing = false }: WineFormProps) {
                 value={form.grapes}
                 onChange={(e) => setForm({ ...form, grapes: e.target.value })}
                 disabled={loading}
-                className="w-full px-3 py-2 border border-onda-border bg-white font-condensed focus:outline-none focus:border-onda-accent"
+                className="w-full px-3 py-2 border border-slate-200 bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent"
               />
             </div>
             <div>
-              <label className="block font-condensed font-bold uppercase text-xs text-onda-muted mb-2">
+              <label className="block text-sm font-medium text-slate-700 mb-2">
                 Importer
               </label>
               <input
@@ -220,11 +220,11 @@ export function WineForm({ wine, isEditing = false }: WineFormProps) {
                 value={form.importer}
                 onChange={(e) => setForm({ ...form, importer: e.target.value })}
                 disabled={loading}
-                className="w-full px-3 py-2 border border-onda-border bg-white font-condensed focus:outline-none focus:border-onda-accent"
+                className="w-full px-3 py-2 border border-slate-200 bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent"
               />
             </div>
             <div>
-              <label className="block font-condensed font-bold uppercase text-xs text-onda-muted mb-2">
+              <label className="block text-sm font-medium text-slate-700 mb-2">
                 Inventory Location
               </label>
               <input
@@ -232,7 +232,7 @@ export function WineForm({ wine, isEditing = false }: WineFormProps) {
                 value={form.inventory_location}
                 onChange={(e) => setForm({ ...form, inventory_location: e.target.value })}
                 disabled={loading}
-                className="w-full px-3 py-2 border border-onda-border bg-white font-condensed focus:outline-none focus:border-onda-accent"
+                className="w-full px-3 py-2 border border-slate-200 bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent"
               />
             </div>
           </div>
@@ -240,14 +240,14 @@ export function WineForm({ wine, isEditing = false }: WineFormProps) {
       </div>
 
       {/* Pricing Section */}
-      <div className="border border-onda-border">
-        <h2 className="font-condensed font-bold uppercase text-onda-accent text-lg px-4 py-3 border-b border-onda-border bg-white">
-          Pricing
-        </h2>
-        <div className="p-4 space-y-4">
+      <div className="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-xs">
+        <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+          <h2 className="font-semibold text-lg text-slate-900">Pricing</h2>
+        </div>
+        <div className="p-6 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block font-condensed font-bold uppercase text-xs text-onda-muted mb-2">
+              <label className="block text-sm font-medium text-slate-700 mb-2">
                 Cost Price <span className="text-red-500">*</span>
               </label>
               <input
@@ -257,11 +257,11 @@ export function WineForm({ wine, isEditing = false }: WineFormProps) {
                 onChange={(e) => setCostPrice(e.target.value)}
                 required
                 disabled={loading}
-                className="w-full px-3 py-2 border border-onda-border bg-white font-condensed focus:outline-none focus:border-onda-accent"
+                className="w-full px-3 py-2 border border-slate-200 bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent"
               />
             </div>
             <div>
-              <label className="block font-condensed font-bold uppercase text-xs text-onda-muted mb-2">
+              <label className="block text-sm font-medium text-slate-700 mb-2">
                 Sale Price
               </label>
               <input
@@ -270,11 +270,11 @@ export function WineForm({ wine, isEditing = false }: WineFormProps) {
                 value={salePrice}
                 onChange={(e) => handleSalePriceChange(e.target.value)}
                 disabled={loading}
-                className="w-full px-3 py-2 border border-onda-border bg-white font-condensed focus:outline-none focus:border-onda-accent"
+                className="w-full px-3 py-2 border border-slate-200 bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent"
               />
             </div>
             <div>
-              <label className="block font-condensed font-bold uppercase text-xs text-onda-muted mb-2">
+              <label className="block text-sm font-medium text-slate-700 mb-2">
                 Glass Price
               </label>
               <input
@@ -283,14 +283,14 @@ export function WineForm({ wine, isEditing = false }: WineFormProps) {
                 value={glassPrice}
                 onChange={(e) => setGlassPrice(e.target.value)}
                 disabled={loading || btg}
-                className="w-full px-3 py-2 border border-onda-border bg-white font-condensed focus:outline-none focus:border-onda-accent disabled:bg-onda-surface"
+                className="w-full px-3 py-2 border border-slate-200 bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent disabled:bg-slate-50 disabled:text-slate-500"
               />
             </div>
           </div>
 
           {/* Markup Buttons */}
           <div>
-            <p className="font-condensed font-bold uppercase text-xs text-onda-muted mb-2">Quick Markup</p>
+            <p className="text-sm font-medium text-slate-700 mb-3">Quick Markup</p>
             <div className="flex gap-2">
               {MARKUP_OPTIONS.map((markup) => (
                 <button
@@ -298,7 +298,7 @@ export function WineForm({ wine, isEditing = false }: WineFormProps) {
                   type="button"
                   onClick={() => handleMarkupClick(markup)}
                   disabled={loading || !costPrice}
-                  className="flex-1 px-3 py-2 border border-onda-border bg-white text-onda-text font-condensed font-bold uppercase text-xs hover:bg-onda-surface disabled:opacity-50 transition"
+                  className="flex-1 px-3 py-2 border border-slate-200 bg-white text-slate-700 rounded-lg font-medium text-sm hover:bg-slate-50 disabled:opacity-50 transition"
                 >
                   {markup}×
                 </button>
@@ -307,21 +307,21 @@ export function WineForm({ wine, isEditing = false }: WineFormProps) {
           </div>
 
           {/* BTG Checkbox */}
-          <label className="flex items-center gap-2 font-condensed text-sm">
+          <label className="flex items-center gap-2 text-sm">
             <input type="checkbox" checked={btg} onChange={(e) => handleBtgChange(e.target.checked)} disabled={loading} />
-            <span className="font-bold uppercase text-onda-muted">BTG (By The Glass)</span>
+            <span className="font-medium text-slate-700">BTG (By The Glass)</span>
           </label>
         </div>
       </div>
 
       {/* Status Section */}
-      <div className="border border-onda-border">
-        <h2 className="font-condensed font-bold uppercase text-onda-accent text-lg px-4 py-3 border-b border-onda-border bg-white">
-          Status
-        </h2>
-        <div className="p-4">
-          <div className="flex gap-4">
-            <label className="flex items-center gap-2 font-condensed text-sm">
+      <div className="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-xs">
+        <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+          <h2 className="font-semibold text-lg text-slate-900">Status</h2>
+        </div>
+        <div className="p-6">
+          <div className="flex gap-6">
+            <label className="flex items-center gap-2 text-sm">
               <input
                 type="radio"
                 name="status"
@@ -330,9 +330,9 @@ export function WineForm({ wine, isEditing = false }: WineFormProps) {
                 onChange={(e) => setForm({ ...form, status: e.target.value as 'Active' | 'Inactive' })}
                 disabled={loading}
               />
-              <span className="font-bold uppercase text-onda-text">Active</span>
+              <span className="font-medium text-slate-700">Active</span>
             </label>
-            <label className="flex items-center gap-2 font-condensed text-sm">
+            <label className="flex items-center gap-2 text-sm">
               <input
                 type="radio"
                 name="status"
@@ -341,18 +341,18 @@ export function WineForm({ wine, isEditing = false }: WineFormProps) {
                 onChange={(e) => setForm({ ...form, status: e.target.value as 'Active' | 'Inactive' })}
                 disabled={loading}
               />
-              <span className="font-bold uppercase text-onda-text">Inactive</span>
+              <span className="font-medium text-slate-700">Inactive</span>
             </label>
           </div>
         </div>
       </div>
 
       {/* Actions */}
-      <div className="flex gap-2">
+      <div className="flex gap-3">
         <button
           type="submit"
           disabled={loading}
-          className="flex-1 px-6 py-3 bg-onda-accent text-white font-condensed font-bold uppercase text-sm hover:opacity-85 disabled:opacity-50 transition"
+          className="flex-1 px-6 py-2.5 bg-onda-accent text-white rounded-lg font-medium text-sm hover:opacity-90 disabled:opacity-50 transition"
         >
           {loading ? 'Saving...' : isEditing ? 'Update Wine' : 'Add Wine'}
         </button>
@@ -360,7 +360,7 @@ export function WineForm({ wine, isEditing = false }: WineFormProps) {
           type="button"
           onClick={() => router.back()}
           disabled={loading}
-          className="flex-1 px-6 py-3 border border-onda-border text-onda-text font-condensed font-bold uppercase text-sm hover:bg-onda-surface disabled:opacity-50 transition"
+          className="flex-1 px-6 py-2.5 border border-slate-200 text-slate-700 rounded-lg font-medium text-sm hover:bg-slate-50 disabled:opacity-50 transition"
         >
           Cancel
         </button>
