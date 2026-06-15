@@ -160,34 +160,34 @@ export default function MenuPreviewPage() {
   }
 
   return (
-    <div className="ml-64 min-h-screen bg-white">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-white border-b border-onda-200 px-8 py-4 flex justify-between items-center print:hidden">
+      <div className="sticky top-0 z-10 bg-white border-b border-gray-200 px-8 py-4 flex justify-between items-center print:hidden">
         <Link href={`/menus/${menuId}`} className="text-onda-red font-medium hover:opacity-80">
           ← Back to Edit
         </Link>
-        <h1 className="text-2xl font-bold text-onda-primary">{menu.title}</h1>
+        <h1 className="text-2xl font-bold text-black">{menu.title}</h1>
         <div className="flex gap-3">
           <button
             onClick={() => window.print()}
-            className="px-4 py-2 border border-onda-200 text-onda-700 rounded-lg text-sm font-medium hover:bg-onda-50 transition"
+            className="px-4 py-2 border border-gray-300 text-gray-700 rounded text-sm font-medium hover:bg-gray-50 transition"
           >
             🖨️ Print
           </button>
           <button
             onClick={handleDownloadPDF}
             disabled={downloading}
-            className="px-4 py-2 bg-onda-red text-white rounded-lg text-sm font-medium hover:opacity-90 disabled:opacity-50 transition"
+            className="px-4 py-2 bg-onda-red text-white rounded text-sm font-medium hover:opacity-90 disabled:opacity-50 transition"
           >
             {downloading ? '⬇️ Downloading...' : '⬇️ PDF'}
           </button>
         </div>
       </div>
 
-      {/* Menu Content */}
-      <div className="max-w-4xl mx-auto px-8 py-12">
+      {/* Menu Content - Print optimized */}
+      <div className="max-w-4xl mx-auto px-12 py-8">
         {menu.sections.length === 0 ? (
-          <p className="text-center text-onda-500">No wines in this menu</p>
+          <p className="text-center text-gray-500">No wines in this menu</p>
         ) : (
           menu.sections.map((section) => {
             // Resolve section display name to key for hierarchical check
@@ -195,15 +195,18 @@ export default function MenuPreviewPage() {
             const hierarchical = sectionKey ? isHierarchical(sectionKey) : false
 
             return (
-              <div key={section.id} className="mb-12">
-                {/* Section Header */}
-                <h2 className="text-3xl font-bold text-onda-red uppercase mb-6">
-                  {section.name}
-                </h2>
+              <div key={section.id} className="mb-16 print:mb-12">
+                {/* Section Header with price header */}
+                <div className="flex justify-between items-baseline mb-6 print:mb-4">
+                  <h2 className="text-4xl font-bold text-black">
+                    {section.name}
+                  </h2>
+                  <div className="text-xs text-gray-600 font-medium">glass/bottle</div>
+                </div>
 
                 {hierarchical ? (
                   // Hierarchical: Group by country, then region
-                  <div className="space-y-8">
+                  <div className="space-y-6 print:space-y-4">
                     {Array.from(
                       new Map(
                         section.wines.map((w) => [w.country, w])
@@ -212,50 +215,54 @@ export default function MenuPreviewPage() {
                       const countryWines = section.wines.filter((w) => w.country === country)
                       const regionGroups = Array.from(
                         new Map(
-                          countryWines.map((w) => [w.region || 'No Region', w])
+                          countryWines.map((w) => [w.region || '', w])
                         ).entries()
                       )
 
                       return (
                         <div key={country}>
-                          <h3 className="text-xl font-semibold text-onda-primary mb-4">
+                          {/* Country Header */}
+                          <h3 className="text-lg font-bold text-black mb-3 print:mb-2">
                             {country}
                           </h3>
-                          <div className="space-y-6 pl-4">
+                          <div className="space-y-4 print:space-y-2">
                             {regionGroups.map(([region, firstRegionWine]) => {
                               const regionWines = countryWines.filter(
-                                (w) => (w.region || 'No Region') === region
+                                (w) => (w.region || '') === region
                               )
 
                               return (
-                                <div key={region}>
-                                  {region !== 'No Region' && (
-                                    <h4 className="text-sm font-medium text-onda-600 mb-3 italic">
+                                <div key={region} className="ml-4 print:ml-0">
+                                  {/* Region subheader */}
+                                  {region && (
+                                    <h4 className="text-sm text-gray-600 italic mb-2 print:mb-1">
                                       {region}
                                     </h4>
                                   )}
-                                  <div className="space-y-3 pl-4">
+                                  <div className="space-y-2 print:space-y-1">
                                     {regionWines.map((wine) => (
                                       <div
                                         key={wine.menu_item_id}
-                                        className="flex justify-between items-baseline gap-4"
+                                        className="flex justify-between items-baseline gap-6 text-sm"
                                       >
                                         <div className="flex-1">
-                                          <p className="text-sm">
+                                          <p className="text-sm text-black leading-tight">
                                             <span className="font-semibold">{wine.producer}</span>
                                             {wine.name && ` – ${wine.name}`}
                                             {wine.vintage && ` ${wine.vintage}`}
                                             {wine.grapes && (
-                                              <span className="text-onda-600 italic"> – {wine.grapes}</span>
+                                              <span className="text-gray-600 italic"> – {wine.grapes}</span>
                                             )}
                                           </p>
                                         </div>
-                                        <div className="flex gap-6 text-sm font-medium text-onda-primary">
-                                          {wine.glass_price && (
-                                            <span className="whitespace-nowrap">€{wine.glass_price.toFixed(2)}</span>
-                                          )}
-                                          {wine.sale_price && (
-                                            <span className="whitespace-nowrap">€{wine.sale_price.toFixed(2)}</span>
+                                        <div className="flex gap-8 text-sm font-medium text-black whitespace-nowrap print:gap-6">
+                                          {wine.glass_price ? (
+                                            <>
+                                              <span>{wine.glass_price.toFixed(0)}</span>
+                                              <span>{wine.sale_price?.toFixed(0)}</span>
+                                            </>
+                                          ) : (
+                                            <span className="text-right">{wine.sale_price?.toFixed(0)}</span>
                                           )}
                                         </div>
                                       </div>
@@ -270,30 +277,55 @@ export default function MenuPreviewPage() {
                     })}
                   </div>
                 ) : (
-                  // Non-hierarchical: Flat list
-                  <div className="space-y-3">
-                    {section.wines.map((wine) => (
-                      <div key={wine.menu_item_id} className="flex justify-between items-baseline gap-4">
-                        <div className="flex-1">
-                          <p className="text-sm">
-                            <span className="font-semibold">{wine.producer}</span>
-                            {wine.name && ` – ${wine.name}`}
-                            {wine.vintage && ` ${wine.vintage}`}
-                            {wine.grapes && (
-                              <span className="text-onda-600 italic"> – {wine.grapes}</span>
-                            )}
-                          </p>
+                  // Non-hierarchical: Region groups with flat wines
+                  <div className="space-y-5 print:space-y-3">
+                    {Array.from(
+                      new Map(
+                        section.wines.map((w) => [w.country || w.region || 'Other', w])
+                      ).entries()
+                    ).map(([regionCountry, firstWine]) => {
+                      const regionWines = section.wines.filter(
+                        (w) => (w.country || w.region || 'Other') === regionCountry
+                      )
+
+                      return (
+                        <div key={regionCountry}>
+                          {/* Region/Country header for non-hierarchical */}
+                          <h4 className="text-sm text-gray-600 italic mb-2 print:mb-1">
+                            {regionCountry}
+                          </h4>
+                          <div className="space-y-2 print:space-y-1">
+                            {regionWines.map((wine) => (
+                              <div
+                                key={wine.menu_item_id}
+                                className="flex justify-between items-baseline gap-6 text-sm"
+                              >
+                                <div className="flex-1">
+                                  <p className="text-sm text-black leading-tight">
+                                    <span className="font-semibold">{wine.producer}</span>
+                                    {wine.name && ` – ${wine.name}`}
+                                    {wine.vintage && ` ${wine.vintage}`}
+                                    {wine.grapes && (
+                                      <span className="text-gray-600 italic"> – {wine.grapes}</span>
+                                    )}
+                                  </p>
+                                </div>
+                                <div className="flex gap-8 text-sm font-medium text-black whitespace-nowrap print:gap-6">
+                                  {wine.glass_price ? (
+                                    <>
+                                      <span>{wine.glass_price.toFixed(0)}</span>
+                                      <span>{wine.sale_price?.toFixed(0)}</span>
+                                    </>
+                                  ) : (
+                                    <span className="text-right">{wine.sale_price?.toFixed(0)}</span>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
                         </div>
-                        <div className="flex gap-6 text-sm font-medium text-onda-primary">
-                          {wine.glass_price && (
-                            <span className="whitespace-nowrap">€{wine.glass_price.toFixed(2)}</span>
-                          )}
-                          {wine.sale_price && (
-                            <span className="whitespace-nowrap">€{wine.sale_price.toFixed(2)}</span>
-                          )}
-                        </div>
-                      </div>
-                    ))}
+                      )
+                    })}
                   </div>
                 )}
               </div>
@@ -308,16 +340,45 @@ export default function MenuPreviewPage() {
           .print\:hidden {
             display: none !important;
           }
-          .ml-64 {
+          .print\:mb-12 {
+            margin-bottom: 2rem !important;
+          }
+          .print\:mb-4 {
+            margin-bottom: 1rem !important;
+          }
+          .print\:mb-2 {
+            margin-bottom: 0.5rem !important;
+          }
+          .print\:mb-1 {
+            margin-bottom: 0.25rem !important;
+          }
+          .print\:space-y-4 > * + * {
+            margin-top: 1rem !important;
+          }
+          .print\:space-y-2 > * + * {
+            margin-top: 0.5rem !important;
+          }
+          .print\:space-y-3 > * + * {
+            margin-top: 0.75rem !important;
+          }
+          .print\:space-y-1 > * + * {
+            margin-top: 0.25rem !important;
+          }
+          .print\:gap-6 {
+            gap: 1.5rem !important;
+          }
+          .print\:ml-0 {
             margin-left: 0 !important;
           }
           body {
             background: white;
             margin: 0;
             padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
           }
           @page {
-            margin: 0.5in;
+            margin: 0.75in;
+            size: A4;
           }
         }
       `}</style>
