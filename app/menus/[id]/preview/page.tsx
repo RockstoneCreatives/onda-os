@@ -162,7 +162,7 @@ export default function MenuPreviewPage() {
   return (
     <div className="ml-64 min-h-screen bg-white">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-white border-b border-onda-200 px-8 py-4 flex justify-between items-center">
+      <div className="sticky top-0 z-10 bg-white border-b border-onda-200 px-8 py-4 flex justify-between items-center print:hidden">
         <Link href={`/menus/${menuId}`} className="text-onda-red font-medium hover:opacity-80">
           ← Back to Edit
         </Link>
@@ -190,7 +190,9 @@ export default function MenuPreviewPage() {
           <p className="text-center text-onda-500">No wines in this menu</p>
         ) : (
           menu.sections.map((section) => {
-            const hierarchical = isHierarchical(section.name)
+            // Resolve section display name to key for hierarchical check
+            const sectionKey = SECTION_ORDER.find((s) => s.display === section.name)?.key
+            const hierarchical = sectionKey ? isHierarchical(sectionKey) : false
 
             return (
               <div key={section.id} className="mb-12">
@@ -303,15 +305,19 @@ export default function MenuPreviewPage() {
       {/* Print Styles */}
       <style jsx>{`
         @media print {
+          .print\:hidden {
+            display: none !important;
+          }
           .ml-64 {
             margin-left: 0 !important;
           }
-          header,
-          button {
-            display: none !important;
-          }
           body {
             background: white;
+            margin: 0;
+            padding: 0;
+          }
+          @page {
+            margin: 0.5in;
           }
         }
       `}</style>
