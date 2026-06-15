@@ -18,8 +18,13 @@ const ALL_COLUMNS: { key: ColumnKey; label: string }[] = [
   { key: 'country', label: 'Country' },
   { key: 'region', label: 'Region' },
   { key: 'grapes', label: 'Grapes' },
+  { key: 'importer', label: 'Importer' },
+  { key: 'btg', label: 'By The Glass' },
+  { key: 'cost_price', label: 'Cost Price' },
   { key: 'sale_price', label: 'Sale Price' },
   { key: 'glass_price', label: 'Glass Price' },
+  { key: 'inventory_location', label: 'Location' },
+  { key: 'tasting_notes', label: 'Tasting Notes' },
   { key: 'status', label: 'Status' },
 ]
 
@@ -100,7 +105,13 @@ export default function WinesPage() {
     const value = wine[key]
     if (value === null || value === undefined) return '—'
     if (key === 'btg') return (value as boolean) ? 'Yes' : 'No'
-    if (key === 'sale_price' || key === 'glass_price') return `€${(value as number).toFixed(2)}`
+    if (key === 'sale_price' || key === 'glass_price' || key === 'cost_price') {
+      return `€${(value as number).toFixed(2)}`
+    }
+    if (key === 'tasting_notes') {
+      const text = String(value)
+      return text.length > 50 ? text.substring(0, 50) + '...' : text
+    }
     return String(value)
   }
 
@@ -168,6 +179,28 @@ export default function WinesPage() {
                   />
                   <span className="text-onda-700 font-medium">Show Inactive</span>
                 </label>
+
+                {/* Column Visibility Dropdown */}
+                <div className="relative group">
+                  <button className="px-3 py-2 border border-onda-200 rounded-lg text-sm font-medium text-onda-700 hover:bg-onda-50 transition">
+                    ⚙️ Columns
+                  </button>
+                  <div className="absolute right-0 mt-1 w-48 bg-white border border-onda-200 rounded-lg shadow-lg hidden group-hover:block z-20">
+                    <div className="p-3 space-y-2">
+                      {ALL_COLUMNS.map((col) => (
+                        <label key={col.key} className="flex items-center gap-2 text-sm cursor-pointer hover:bg-onda-50 p-1 rounded">
+                          <input
+                            type="checkbox"
+                            checked={visibleColumns.includes(col.key)}
+                            onChange={() => handleToggleColumn(col.key)}
+                            className="w-4 h-4"
+                          />
+                          <span className="text-onda-700">{col.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
