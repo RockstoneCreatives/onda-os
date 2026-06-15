@@ -31,50 +31,53 @@ interface MenuData {
   menu_sections: MenuSectionData[]
 }
 
-// PDF styles
+// PDF styles - matching menu preview exact specifications
 const styles = StyleSheet.create({
   page: {
-    padding: 40,
-    fontSize: 13,
+    padding: 60, // 20mm in points
+    fontSize: 10,
     backgroundColor: '#ffffff',
   },
   sectionHeader: {
-    fontSize: 29,
+    fontSize: 22,
     fontWeight: 'bold',
-    marginTop: 24,
-    marginBottom: 16,
+    marginTop: 18,
+    marginBottom: 12,
     color: '#000000',
   },
+  glassBottleLabel: {
+    fontSize: 9,
+    marginBottom: 12,
+    color: '#666666',
+  },
   countryHeader: {
-    fontSize: 13,
-    fontWeight: '600',
+    fontSize: 10,
+    fontWeight: 'bold',
     marginTop: 12,
     marginBottom: 6,
     color: '#000000',
   },
   regionHeader: {
-    fontSize: 13,
+    fontSize: 10,
     fontStyle: 'italic',
-    marginBottom: 8,
+    marginBottom: 5,
     color: '#000000',
   },
   wineRow: {
-    marginBottom: 8,
-    paddingBottom: 8,
-    borderBottomWidth: 0.5,
-    borderBottomColor: '#e5e5e5',
+    marginBottom: 5,
   },
   wineNameRow: {
-    flexDirection: 'row',
+    flexDirection: 'row' as const,
     justifyContent: 'space-between',
+    marginBottom: 5,
   },
   wineNameText: {
     flex: 1,
-    fontSize: 13,
+    fontSize: 10,
   },
   priceText: {
-    fontSize: 13,
-    width: 60,
+    fontSize: 10,
+    width: 50,
     textAlign: 'right' as const,
   },
 })
@@ -238,7 +241,11 @@ function createMenuPDF(menuData: MenuData) {
   return React.createElement(
     Document,
     { title: `ONDA-Menu-${menuData.title}` },
-    React.createElement(Page, { size: 'A4', style: styles.page }, ...pageElements)
+    React.createElement(
+      Page,
+      { size: 'A4', style: styles.page, wrap: false },
+      ...pageElements
+    )
   )
 }
 

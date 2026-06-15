@@ -185,7 +185,7 @@ export default function MenuPreviewPage() {
       </div>
 
       {/* Menu Content - Print optimized */}
-      <div className="max-w-4xl mx-auto px-12 py-8" style={{ fontSize: '10pt', lineHeight: '1.4' }}>
+      <div className="mx-auto" style={{ maxWidth: '210mm', fontSize: '10pt', lineHeight: '1.4', padding: '20mm' }}>
         {menu.sections.length === 0 ? (
           <p className="text-center text-gray-500">No wines in this menu</p>
         ) : (
@@ -197,11 +197,11 @@ export default function MenuPreviewPage() {
             return (
               <div key={section.id} className={`${sectionIndex === 0 ? 'relative' : ''} ${sectionIndex > 0 ? 'print:page-break-before-always' : ''} mb-16 print:mb-12`}>
                 {/* Section Header with price header */}
-                <div className="flex justify-between items-baseline mb-4 print:mb-3" style={{ marginBottom: '12px' }}>
-                  <h2 className="font-bold text-black" style={{ fontSize: '32pt', lineHeight: '1.1' }}>
+                <div className="flex justify-between items-baseline" style={{ marginBottom: '12px', marginTop: sectionIndex === 0 ? '0' : '24px' }}>
+                  <h2 className="font-bold text-black" style={{ fontSize: '22pt', lineHeight: '1.1' }}>
                     {section.name}
                   </h2>
-                  <div className="text-gray-600 font-medium" style={{ fontSize: '8pt' }}>glass/bottle</div>
+                  <div className="text-gray-600 font-medium" style={{ fontSize: '9pt' }}>glass/bottle</div>
                 </div>
 
                 {hierarchical ? (
@@ -220,9 +220,9 @@ export default function MenuPreviewPage() {
                       )
 
                       return (
-                        <div key={country} style={{ marginTop: '15px', marginBottom: '6px' }}>
+                        <div key={country} style={{ marginTop: '12px', marginBottom: '6px' }}>
                           {/* Country Header */}
-                          <h3 className="font-bold text-black" style={{ fontSize: '15pt', marginBottom: '6px' }}>
+                          <h3 className="font-bold text-black" style={{ fontSize: '10pt', marginBottom: '6px' }}>
                             {country}
                           </h3>
                           <div className="space-y-1" style={{ marginBottom: '12px' }}>
@@ -380,51 +380,23 @@ export default function MenuPreviewPage() {
           .print\:page-break-before-always {
             page-break-before: always !important;
           }
-          .print\:mb-12 {
-            margin-bottom: 2rem !important;
-          }
-          .print\:mb-4 {
-            margin-bottom: 1rem !important;
-          }
-          .print\:mb-2 {
-            margin-bottom: 0.5rem !important;
-          }
-          .print\:mb-1 {
-            margin-bottom: 0.25rem !important;
-          }
-          .print\:mt-16 {
-            margin-top: 4rem !important;
-          }
-          .print\:pt-6 {
-            padding-top: 1.5rem !important;
-          }
-          .print\:space-y-4 > * + * {
-            margin-top: 1rem !important;
-          }
-          .print\:space-y-2 > * + * {
-            margin-top: 0.5rem !important;
-          }
-          .print\:space-y-3 > * + * {
-            margin-top: 0.75rem !important;
-          }
-          .print\:space-y-1 > * + * {
-            margin-top: 0.25rem !important;
-          }
-          .print\:gap-6 {
-            gap: 1.5rem !important;
-          }
-          .print\:ml-0 {
-            margin-left: 0 !important;
-          }
           body {
             background: white;
             margin: 0;
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            width: 210mm;
+            height: 297mm;
           }
           @page {
-            margin: 0.75in;
             size: A4;
+            margin: 20mm;
+          }
+          @media print {
+            html {
+              width: 210mm;
+              height: 297mm;
+            }
           }
         }
       `}</style>
