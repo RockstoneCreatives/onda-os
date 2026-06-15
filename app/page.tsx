@@ -62,7 +62,7 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="border-b border-onda-200 bg-white">
         <div className="px-8 py-8">
-          <h1 className="text-4xl font-bold text-onda-primary">Dashboard - FIGMA REDESIGN v3</h1>
+          <h1 className="text-4xl font-bold text-onda-primary">Dashboard</h1>
           <p className="text-onda-500 mt-2 text-base">Manage your wine inventory and create menus</p>
         </div>
       </div>
