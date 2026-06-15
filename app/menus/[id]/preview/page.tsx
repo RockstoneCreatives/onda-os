@@ -189,13 +189,13 @@ export default function MenuPreviewPage() {
         {menu.sections.length === 0 ? (
           <p className="text-center text-gray-500">No wines in this menu</p>
         ) : (
-          menu.sections.map((section) => {
+          menu.sections.map((section, sectionIndex) => {
             // Resolve section display name to key for hierarchical check
             const sectionKey = SECTION_ORDER.find((s) => s.display === section.name)?.key
             const hierarchical = sectionKey ? isHierarchical(sectionKey) : false
 
             return (
-              <div key={section.id} className="mb-16 print:mb-12">
+              <div key={section.id} className={`${sectionIndex === 0 ? 'relative' : ''} ${sectionIndex > 0 ? 'print:page-break-before-always' : ''} mb-16 print:mb-12`}>
                 {/* Section Header with price header */}
                 <div className="flex justify-between items-baseline mb-6 print:mb-4">
                   <h2 className="text-4xl font-bold text-black">
@@ -328,6 +328,41 @@ export default function MenuPreviewPage() {
                     })}
                   </div>
                 )}
+
+                {/* Onda Logo on first page only */}
+                {sectionIndex === 0 && (
+                  <div className="mt-20 pt-8 border-t border-gray-200 flex justify-center print:mt-16 print:pt-6">
+                    <svg
+                      width="120"
+                      height="60"
+                      viewBox="0 0 120 60"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="text-onda-red"
+                    >
+                      {/* Red oval background */}
+                      <ellipse cx="60" cy="30" rx="58" ry="28" fill="currentColor" />
+
+                      {/* Left arrows */}
+                      <g fill="white">
+                        <path d="M 25 30 L 32 24 L 30 26 L 24 32 Z" />
+                        <path d="M 18 30 L 25 24 L 23 26 L 17 32 Z" />
+                      </g>
+
+                      {/* Right arrows */}
+                      <g fill="white">
+                        <path d="M 95 30 L 88 24 L 90 26 L 96 32 Z" />
+                        <path d="M 102 30 L 95 24 L 97 26 L 103 32 Z" />
+                      </g>
+
+                      {/* Center dots */}
+                      <circle cx="45" cy="30" r="2" fill="white" />
+                      <circle cx="53" cy="30" r="2" fill="white" />
+                      <circle cx="60" cy="30" r="2" fill="white" />
+                      <circle cx="67" cy="30" r="2" fill="white" />
+                      <circle cx="75" cy="30" r="2" fill="white" />
+                    </svg>
+                  </div>
+                )}
               </div>
             )
           })
@@ -340,6 +375,9 @@ export default function MenuPreviewPage() {
           .print\:hidden {
             display: none !important;
           }
+          .print\:page-break-before-always {
+            page-break-before: always !important;
+          }
           .print\:mb-12 {
             margin-bottom: 2rem !important;
           }
@@ -351,6 +389,12 @@ export default function MenuPreviewPage() {
           }
           .print\:mb-1 {
             margin-bottom: 0.25rem !important;
+          }
+          .print\:mt-16 {
+            margin-top: 4rem !important;
+          }
+          .print\:pt-6 {
+            padding-top: 1.5rem !important;
           }
           .print\:space-y-4 > * + * {
             margin-top: 1rem !important;
