@@ -114,9 +114,25 @@ export default function MenuPreviewPage() {
     setDownloading(true)
     try {
       const response = await fetch(`/api/menus/${menuId}/pdf`)
-      if (!response.ok) throw new Error('Failed to download PDF')
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error('PDF API error:', response.status, errorText)
+        throw new Error(`Server error: ${response.status}`)
+      }
+
+      const contentType = response.headers.get('content-type')
+      if (!contentType?.includes('application/pdf')) {
+        const text = await response.text()
+        console.error('Invalid content type:', contentType, text)
+        throw new Error('Invalid response format from server')
+      }
 
       const blob = await response.blob()
+      if (blob.size === 0) {
+        throw new Error('PDF generation returned empty file')
+      }
+
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
@@ -128,8 +144,8 @@ export default function MenuPreviewPage() {
       toast.success('PDF downloaded')
     } catch (err) {
       const error = err as Error
+      console.error('PDF download error:', error)
       toast.error(error.message || 'Failed to download PDF')
-      console.error(error)
     } finally {
       setDownloading(false)
     }
@@ -330,45 +346,50 @@ export default function MenuPreviewPage() {
                     })}
                   </div>
                 )}
-
-                {/* Onda Logo on first page only */}
-                {sectionIndex === 0 && (
-                  <div className="mt-20 pt-8 border-t border-gray-200 flex justify-center print:mt-16 print:pt-6">
-                    <svg
-                      width="120"
-                      height="60"
-                      viewBox="0 0 120 60"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="text-onda-red"
-                    >
-                      {/* Red oval background */}
-                      <ellipse cx="60" cy="30" rx="58" ry="28" fill="currentColor" />
-
-                      {/* Left arrows */}
-                      <g fill="white">
-                        <path d="M 25 30 L 32 24 L 30 26 L 24 32 Z" />
-                        <path d="M 18 30 L 25 24 L 23 26 L 17 32 Z" />
-                      </g>
-
-                      {/* Right arrows */}
-                      <g fill="white">
-                        <path d="M 95 30 L 88 24 L 90 26 L 96 32 Z" />
-                        <path d="M 102 30 L 95 24 L 97 26 L 103 32 Z" />
-                      </g>
-
-                      {/* Center dots */}
-                      <circle cx="45" cy="30" r="2" fill="white" />
-                      <circle cx="53" cy="30" r="2" fill="white" />
-                      <circle cx="60" cy="30" r="2" fill="white" />
-                      <circle cx="67" cy="30" r="2" fill="white" />
-                      <circle cx="75" cy="30" r="2" fill="white" />
-                    </svg>
-                  </div>
-                )}
               </div>
             )
           })
         )}
+
+        {/* Onda Logo at bottom of page 1 */}
+        <div style={{
+          marginTop: '60px',
+          paddingTop: '40px',
+          borderTop: '1px solid #d1d5db',
+          display: 'flex',
+          justifyContent: 'center',
+          pageBreakAfter: 'always'
+        }} className="print:page-break-after-always">
+          <svg
+            width="120"
+            height="60"
+            viewBox="0 0 120 60"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{ color: '#C0392B' }}
+          >
+            {/* Red oval background */}
+            <ellipse cx="60" cy="30" rx="58" ry="28" fill="currentColor" />
+
+            {/* Left arrows */}
+            <g fill="white">
+              <path d="M 25 30 L 32 24 L 30 26 L 24 32 Z" />
+              <path d="M 18 30 L 25 24 L 23 26 L 17 32 Z" />
+            </g>
+
+            {/* Right arrows */}
+            <g fill="white">
+              <path d="M 95 30 L 88 24 L 90 26 L 96 32 Z" />
+              <path d="M 102 30 L 95 24 L 97 26 L 103 32 Z" />
+            </g>
+
+            {/* Center dots */}
+            <circle cx="45" cy="30" r="2" fill="white" />
+            <circle cx="53" cy="30" r="2" fill="white" />
+            <circle cx="60" cy="30" r="2" fill="white" />
+            <circle cx="67" cy="30" r="2" fill="white" />
+            <circle cx="75" cy="30" r="2" fill="white" />
+          </svg>
+        </div>
       </div>
 
       {/* Print Styles */}
