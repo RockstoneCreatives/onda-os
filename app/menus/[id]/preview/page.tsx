@@ -185,7 +185,7 @@ export default function MenuPreviewPage() {
       </div>
 
       {/* Menu Content - Print optimized */}
-      <div className="max-w-4xl mx-auto px-12 py-8">
+      <div className="max-w-4xl mx-auto px-12 py-8" style={{ fontSize: '10pt', lineHeight: '1.4' }}>
         {menu.sections.length === 0 ? (
           <p className="text-center text-gray-500">No wines in this menu</p>
         ) : (
@@ -197,11 +197,11 @@ export default function MenuPreviewPage() {
             return (
               <div key={section.id} className={`${sectionIndex === 0 ? 'relative' : ''} ${sectionIndex > 0 ? 'print:page-break-before-always' : ''} mb-16 print:mb-12`}>
                 {/* Section Header with price header */}
-                <div className="flex justify-between items-baseline mb-6 print:mb-4">
-                  <h2 className="text-4xl font-bold text-black">
+                <div className="flex justify-between items-baseline mb-4 print:mb-3" style={{ marginBottom: '12px' }}>
+                  <h2 className="font-bold text-black" style={{ fontSize: '32pt', lineHeight: '1.1' }}>
                     {section.name}
                   </h2>
-                  <div className="text-xs text-gray-600 font-medium">glass/bottle</div>
+                  <div className="text-gray-600 font-medium" style={{ fontSize: '8pt' }}>glass/bottle</div>
                 </div>
 
                 {hierarchical ? (
@@ -220,49 +220,50 @@ export default function MenuPreviewPage() {
                       )
 
                       return (
-                        <div key={country}>
+                        <div key={country} style={{ marginTop: '15px', marginBottom: '6px' }}>
                           {/* Country Header */}
-                          <h3 className="text-lg font-bold text-black mb-3 print:mb-2">
+                          <h3 className="font-bold text-black" style={{ fontSize: '15pt', marginBottom: '6px' }}>
                             {country}
                           </h3>
-                          <div className="space-y-4 print:space-y-2">
+                          <div className="space-y-1" style={{ marginBottom: '12px' }}>
                             {regionGroups.map(([region, firstRegionWine]) => {
                               const regionWines = countryWines.filter(
                                 (w) => (w.region || '') === region
                               )
 
                               return (
-                                <div key={region} className="ml-4 print:ml-0">
+                                <div key={region} style={{ marginBottom: '12px' }}>
                                   {/* Region subheader */}
                                   {region && (
-                                    <h4 className="text-sm text-gray-600 italic mb-2 print:mb-1">
+                                    <h4 className="italic text-black" style={{ fontSize: '10pt', marginBottom: '4px' }}>
                                       {region}
                                     </h4>
                                   )}
-                                  <div className="space-y-2 print:space-y-1">
+                                  <div className="space-y-1"  style={{ marginBottom: '8px' }}>
                                     {regionWines.map((wine) => (
                                       <div
                                         key={wine.menu_item_id}
-                                        className="flex justify-between items-baseline gap-6 text-sm"
+                                        className="flex justify-between items-baseline gap-6"
+                                        style={{ marginBottom: '5px', fontSize: '10pt' }}
                                       >
                                         <div className="flex-1">
-                                          <p className="text-sm text-black leading-tight">
-                                            <span className="font-semibold">{wine.producer}</span>
+                                          <p className="text-black leading-tight" style={{ fontSize: '10pt' }}>
+                                            <span>{wine.producer}</span>
                                             {wine.name && ` – ${wine.name}`}
                                             {wine.vintage && ` ${wine.vintage}`}
                                             {wine.grapes && (
-                                              <span className="text-gray-600 italic"> – {wine.grapes}</span>
+                                              <span className="italic" style={{ color: '#666' }}> – {wine.grapes}</span>
                                             )}
                                           </p>
                                         </div>
-                                        <div className="flex gap-8 text-sm font-medium text-black whitespace-nowrap print:gap-6">
+                                        <div className="flex gap-12 text-black whitespace-nowrap" style={{ fontSize: '10pt', gap: '24px' }}>
                                           {wine.glass_price ? (
                                             <>
-                                              <span>{wine.glass_price.toFixed(0)}</span>
-                                              <span>{wine.sale_price?.toFixed(0)}</span>
+                                              <span style={{ width: '40px', textAlign: 'right' }}>{wine.glass_price.toFixed(0)}</span>
+                                              <span style={{ width: '40px', textAlign: 'right' }}>{wine.sale_price?.toFixed(0)}</span>
                                             </>
                                           ) : (
-                                            <span className="text-right">{wine.sale_price?.toFixed(0)}</span>
+                                            <span style={{ width: '80px', textAlign: 'right' }}>{wine.sale_price?.toFixed(0)}</span>
                                           )}
                                         </div>
                                       </div>
@@ -278,7 +279,7 @@ export default function MenuPreviewPage() {
                   </div>
                 ) : (
                   // Non-hierarchical: Region groups with flat wines
-                  <div className="space-y-5 print:space-y-3">
+                  <div className="space-y-1" style={{ marginBottom: '12px' }}>
                     {Array.from(
                       new Map(
                         section.wines.map((w) => [w.country || w.region || 'Other', w])
@@ -289,35 +290,36 @@ export default function MenuPreviewPage() {
                       )
 
                       return (
-                        <div key={regionCountry}>
+                        <div key={regionCountry} style={{ marginBottom: '12px' }}>
                           {/* Region/Country header for non-hierarchical */}
-                          <h4 className="text-sm text-gray-600 italic mb-2 print:mb-1">
+                          <h4 className="italic text-black" style={{ fontSize: '10pt', marginBottom: '4px' }}>
                             {regionCountry}
                           </h4>
-                          <div className="space-y-2 print:space-y-1">
+                          <div className="space-y-1" style={{ marginBottom: '8px' }}>
                             {regionWines.map((wine) => (
                               <div
                                 key={wine.menu_item_id}
-                                className="flex justify-between items-baseline gap-6 text-sm"
+                                className="flex justify-between items-baseline gap-6"
+                                style={{ marginBottom: '5px', fontSize: '10pt' }}
                               >
                                 <div className="flex-1">
-                                  <p className="text-sm text-black leading-tight">
-                                    <span className="font-semibold">{wine.producer}</span>
+                                  <p className="text-black leading-tight" style={{ fontSize: '10pt' }}>
+                                    <span>{wine.producer}</span>
                                     {wine.name && ` – ${wine.name}`}
                                     {wine.vintage && ` ${wine.vintage}`}
                                     {wine.grapes && (
-                                      <span className="text-gray-600 italic"> – {wine.grapes}</span>
+                                      <span className="italic" style={{ color: '#666' }}> – {wine.grapes}</span>
                                     )}
                                   </p>
                                 </div>
-                                <div className="flex gap-8 text-sm font-medium text-black whitespace-nowrap print:gap-6">
+                                <div className="flex gap-12 text-black whitespace-nowrap" style={{ fontSize: '10pt', gap: '24px' }}>
                                   {wine.glass_price ? (
                                     <>
-                                      <span>{wine.glass_price.toFixed(0)}</span>
-                                      <span>{wine.sale_price?.toFixed(0)}</span>
+                                      <span style={{ width: '40px', textAlign: 'right' }}>{wine.glass_price.toFixed(0)}</span>
+                                      <span style={{ width: '40px', textAlign: 'right' }}>{wine.sale_price?.toFixed(0)}</span>
                                     </>
                                   ) : (
-                                    <span className="text-right">{wine.sale_price?.toFixed(0)}</span>
+                                    <span style={{ width: '80px', textAlign: 'right' }}>{wine.sale_price?.toFixed(0)}</span>
                                   )}
                                 </div>
                               </div>
