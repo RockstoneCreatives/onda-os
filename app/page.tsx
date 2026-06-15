@@ -58,95 +58,96 @@ export default function DashboardPage() {
   }, [router])
 
   return (
-    <div className="ml-64 min-h-screen bg-slate-50">
+    <div className="ml-64 min-h-screen bg-onda-50">
       {/* Header */}
-      <div className="border-b border-slate-200 bg-white">
-        <div className="px-8 py-6">
-          <h1 className="text-3xl font-bold text-slate-900">Dashboard</h1>
-          <p className="text-slate-500 mt-1">Welcome to Onda OS. Manage your wine inventory and menus.</p>
+      <div className="border-b border-onda-200 bg-white">
+        <div className="px-8 py-8">
+          <h1 className="text-4xl font-bold text-onda-primary">Dashboard</h1>
+          <p className="text-onda-500 mt-2 text-base">Manage your wine inventory and create menus</p>
         </div>
       </div>
 
       {/* Content */}
       <div className="p-8">
         {loading ? (
-          <div className="text-center py-12">
+          <div className="text-center py-16">
             <div className="inline-block">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-onda-accent"></div>
             </div>
-            <p className="mt-4 text-slate-500">Loading dashboard...</p>
+            <p className="mt-4 text-onda-500">Loading dashboard...</p>
           </div>
         ) : (
           <>
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-xs hover:shadow-md transition">
-                <p className="text-sm font-medium text-slate-600">Total Wines</p>
-                <p className="text-3xl font-bold text-slate-900 mt-2">{stats.totalWines}</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+              <div className="animate-slide-up bg-white rounded-xl border border-onda-200 p-6 shadow-sm hover:shadow-md transition-all">
+                <p className="text-sm font-medium text-onda-500">Total Wines</p>
+                <p className="text-4xl font-bold text-onda-primary mt-3">{stats.totalWines}</p>
+                <div className="mt-4 h-1 w-12 bg-onda-accent rounded-full"></div>
               </div>
-              <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-xs hover:shadow-md transition">
-                <p className="text-sm font-medium text-slate-600">Active Wines</p>
-                <p className="text-3xl font-bold text-green-600 mt-2">{stats.activeWines}</p>
+              <div className="animate-slide-up bg-white rounded-xl border border-onda-200 p-6 shadow-sm hover:shadow-md transition-all" style={{ animationDelay: '0.1s' }}>
+                <p className="text-sm font-medium text-onda-500">Active Wines</p>
+                <p className="text-4xl font-bold text-emerald-600 mt-3">{stats.activeWines}</p>
+                <div className="mt-4 h-1 w-12 bg-emerald-500 rounded-full"></div>
               </div>
-              <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-xs hover:shadow-md transition">
-                <p className="text-sm font-medium text-slate-600">Inactive Wines</p>
-                <p className="text-3xl font-bold text-slate-900 mt-2">{stats.inactiveWines}</p>
+              <div className="animate-slide-up bg-white rounded-xl border border-onda-200 p-6 shadow-sm hover:shadow-md transition-all" style={{ animationDelay: '0.2s' }}>
+                <p className="text-sm font-medium text-onda-500">Inactive Wines</p>
+                <p className="text-4xl font-bold text-onda-primary mt-3">{stats.inactiveWines}</p>
+                <div className="mt-4 h-1 w-12 bg-onda-primary rounded-full"></div>
               </div>
-              <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-xs hover:shadow-md transition">
-                <p className="text-sm font-medium text-slate-600">Menus Created</p>
-                <p className="text-3xl font-bold text-onda-accent mt-2">{stats.menusCreated}</p>
+              <div className="animate-slide-up bg-white rounded-xl border border-onda-200 p-6 shadow-sm hover:shadow-md transition-all" style={{ animationDelay: '0.3s' }}>
+                <p className="text-sm font-medium text-onda-500">Menus Created</p>
+                <p className="text-4xl font-bold text-onda-accent mt-3">{stats.menusCreated}</p>
+                <div className="mt-4 h-1 w-12 bg-onda-accent rounded-full"></div>
               </div>
             </div>
 
             {/* Quick Actions */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Browse Wines */}
-              <Link href="/wines" className="group">
-                <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-xs hover:shadow-md transition cursor-pointer">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center text-xl">🍷</div>
+            <div>
+              <h2 className="text-lg font-semibold text-onda-primary mb-6">Quick Actions</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Browse Wines */}
+                <Link href="/wines" className="group">
+                  <div className="bg-white rounded-xl border border-onda-200 p-8 shadow-sm hover:shadow-md hover:border-onda-accent transition-all h-full">
+                    <div className="h-12 w-12 rounded-lg bg-onda-100 flex items-center justify-center text-2xl mb-4 group-hover:bg-onda-accent group-hover:bg-opacity-10 transition">🍷</div>
+                    <h3 className="text-lg font-semibold text-onda-primary group-hover:text-onda-accent transition">Browse Wines</h3>
+                    <p className="text-onda-500 text-sm mt-2 leading-relaxed">
+                      Explore and search your complete wine inventory with detailed information.
+                    </p>
+                    <p className="text-onda-accent text-sm font-semibold mt-4 group-hover:translate-x-1 transition inline-flex items-center gap-1">
+                      View wines <span>→</span>
+                    </p>
                   </div>
-                  <h3 className="text-lg font-semibold text-slate-900 group-hover:text-onda-accent transition">Browse Wines</h3>
-                  <p className="text-slate-600 text-sm mt-2">
-                    View, search, and manage your complete wine inventory with all details from the master list.
-                  </p>
-                  <p className="text-onda-accent text-sm font-medium mt-4 group-hover:translate-x-1 transition">
-                    Get started →
-                  </p>
-                </div>
-              </Link>
+                </Link>
 
-              {/* Create Menu */}
-              <Link href="/menus/new" className="group">
-                <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-xs hover:shadow-md transition cursor-pointer">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="h-10 w-10 rounded-lg bg-red-100 flex items-center justify-center text-xl">📋</div>
+                {/* Create Menu */}
+                <Link href="/menus/new" className="group">
+                  <div className="bg-white rounded-xl border border-onda-200 p-8 shadow-sm hover:shadow-md hover:border-onda-accent transition-all h-full">
+                    <div className="h-12 w-12 rounded-lg bg-onda-secondary flex items-center justify-center text-2xl mb-4 group-hover:bg-onda-accent group-hover:bg-opacity-10 transition">✨</div>
+                    <h3 className="text-lg font-semibold text-onda-primary group-hover:text-onda-accent transition">Create Menu</h3>
+                    <p className="text-onda-500 text-sm mt-2 leading-relaxed">
+                      Build a new wine menu by selecting and organizing wines from your list.
+                    </p>
+                    <p className="text-onda-accent text-sm font-semibold mt-4 group-hover:translate-x-1 transition inline-flex items-center gap-1">
+                      Create new <span>→</span>
+                    </p>
                   </div>
-                  <h3 className="text-lg font-semibold text-slate-900 group-hover:text-onda-accent transition">Create Menu</h3>
-                  <p className="text-slate-600 text-sm mt-2">
-                    Build a new menu by selecting wines. They'll automatically organize and export as PDF.
-                  </p>
-                  <p className="text-onda-accent text-sm font-medium mt-4 group-hover:translate-x-1 transition">
-                    Create new →
-                  </p>
-                </div>
-              </Link>
+                </Link>
 
-              {/* Menu History */}
-              <Link href="/menus" className="group">
-                <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-xs hover:shadow-md transition cursor-pointer">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="h-10 w-10 rounded-lg bg-green-100 flex items-center justify-center text-xl">📁</div>
+                {/* Menu History */}
+                <Link href="/menus" className="group">
+                  <div className="bg-white rounded-xl border border-onda-200 p-8 shadow-sm hover:shadow-md hover:border-onda-accent transition-all h-full">
+                    <div className="h-12 w-12 rounded-lg bg-onda-100 flex items-center justify-center text-2xl mb-4 group-hover:bg-onda-accent group-hover:bg-opacity-10 transition">📋</div>
+                    <h3 className="text-lg font-semibold text-onda-primary group-hover:text-onda-accent transition">Menu History</h3>
+                    <p className="text-onda-500 text-sm mt-2 leading-relaxed">
+                      View, edit, and export all previously created wine menus.
+                    </p>
+                    <p className="text-onda-accent text-sm font-semibold mt-4 group-hover:translate-x-1 transition inline-flex items-center gap-1">
+                      Browse menus <span>→</span>
+                    </p>
                   </div>
-                  <h3 className="text-lg font-semibold text-slate-900 group-hover:text-onda-accent transition">Menu History</h3>
-                  <p className="text-slate-600 text-sm mt-2">
-                    View, edit, and export all menus you've created. Download PDFs or create variations.
-                  </p>
-                  <p className="text-onda-accent text-sm font-medium mt-4 group-hover:translate-x-1 transition">
-                    Browse menus →
-                  </p>
-                </div>
-              </Link>
+                </Link>
+              </div>
             </div>
           </>
         )}
