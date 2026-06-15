@@ -34,6 +34,12 @@ const config: Config = {
           800: "#1e293b",
           900: "#0f172a",
         },
+        "gray-900": "var(--ds-gray-900)",
+        "gray-1000": "var(--ds-gray-1000)",
+        "gray-100": "var(--ds-gray-100)",
+        "gray-alpha-400": "var(--ds-gray-alpha-400)",
+        "background-100": "var(--ds-background-100)",
+        "background-200": "var(--ds-background-200)",
       },
       fontFamily: {
         sans: ['"Inter"', "sans-serif"],
@@ -44,6 +50,20 @@ const config: Config = {
         md: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
         lg: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
         xl: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+      },
+      keyframes: {
+        "fade-out": {
+          "0%": { opacity: "1" },
+          "100%": { opacity: "0" },
+        },
+        "fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+      },
+      animation: {
+        "fade-out": "fade-out 0.3s ease-in-out",
+        "fade-in": "fade-in 0.3s ease-in-out",
       },
     },
   },

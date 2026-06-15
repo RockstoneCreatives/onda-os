@@ -4,6 +4,26 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --ds-gray-900: hsla(0, 0%, 40%, 1);
+    --ds-gray-1000: hsla(0, 0%, 30%, 1);
+    --ds-gray-100: hsla(0, 0%, 96%, 1);
+    --ds-gray-alpha-400: hsla(0, 0%, 0%, 0.08);
+    --ds-background-100: hsla(0, 0%, 100%, 1);
+    --ds-background-200: hsla(0, 0%, 98%, 1);
+  }
+
+  .dark {
+    --ds-gray-900: hsla(0, 0%, 63%, 1);
+    --ds-gray-1000: hsla(0, 0%, 80%, 1);
+    --ds-gray-100: hsla(0, 0%, 8%, 1);
+    --ds-gray-alpha-400: hsla(0, 0%, 100%, 0.14);
+    --ds-background-100: hsla(0, 0%, 4%, 1);
+    --ds-background-200: hsla(0, 0%, 0%, 1);
+  }
+}
+
 html {
   background-color: #f8f9fa;
 }
