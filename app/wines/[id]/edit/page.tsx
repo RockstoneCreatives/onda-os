@@ -17,6 +17,7 @@ export default function EditWinePage() {
 
   const [wine, setWine] = useState<Wine | null>(null)
   const [loading, setLoading] = useState(true)
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
     const fetchWine = async () => {
@@ -48,6 +49,30 @@ export default function EditWinePage() {
 
     fetchWine()
   }, [wineId, router])
+
+  const handleDelete = async () => {
+    if (!wine) return
+
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${wine.producer} - ${wine.name}"? This action cannot be undone.`
+    )
+
+    if (!confirmed) return
+
+    setDeleting(true)
+    try {
+      const { error } = await supabase.from('wines').delete().eq('id', wine.id)
+      if (error) throw error
+      toast.success('Wine deleted')
+      router.push('/wines')
+    } catch (err) {
+      const error = err as Error
+      toast.error(error.message || 'Failed to delete wine')
+      console.error(error)
+    } finally {
+      setDeleting(false)
+    }
+  }
 
   if (loading) {
     return (
@@ -89,6 +114,21 @@ export default function EditWinePage() {
       {/* Content */}
       <main className="max-w-3xl mx-auto px-8 py-8">
         <WineForm wine={wine} isEditing />
+
+        {/* Delete Section */}
+        <div className="mt-12 pt-8 border-t border-slate-200">
+          <h3 className="text-lg font-semibold text-slate-900 mb-3">Danger Zone</h3>
+          <p className="text-sm text-slate-600 mb-4">
+            Permanently delete this wine from the system. This action cannot be undone.
+          </p>
+          <button
+            onClick={handleDelete}
+            disabled={deleting}
+            className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 disabled:opacity-50 transition"
+          >
+            {deleting ? 'Deleting...' : 'Delete Wine'}
+          </button>
+        </div>
       </main>
     </div>
   )

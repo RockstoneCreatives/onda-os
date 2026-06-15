@@ -20,6 +20,7 @@ export function Sidebar() {
   const navItems = [
     { href: '/', label: 'Dashboard', pattern: ['/', '/page'] },
     { href: '/wines', label: 'Wines', pattern: ['/wines'] },
+    { href: '/wines/inventory', label: 'Inventory', pattern: ['/wines/inventory'] },
     { href: '/menus', label: 'Menus', pattern: ['/menus'] },
   ]
 

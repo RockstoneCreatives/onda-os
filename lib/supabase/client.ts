@@ -24,6 +24,7 @@ export type Database = {
           sale_price: number | null
           glass_price: number | null
           inventory_location: string | null
+          tasting_notes: string | null
           status: 'Active' | 'Inactive'
           created_at: string
           updated_at: string

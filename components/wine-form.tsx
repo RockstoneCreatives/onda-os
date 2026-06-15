@@ -35,6 +35,7 @@ export function WineForm({ wine, isEditing = false }: WineFormProps) {
     grapes: wine?.grapes || '',
     importer: wine?.importer || '',
     inventory_location: wine?.inventory_location || '',
+    tasting_notes: wine?.tasting_notes || '',
     status: (wine?.status as 'Active' | 'Inactive') || 'Active',
   })
 
@@ -83,6 +84,7 @@ export function WineForm({ wine, isEditing = false }: WineFormProps) {
 
       const payload: WineInsert = {
         ...form,
+        tasting_notes: form.tasting_notes || null,
         cost_price: costPrice ? parseFloat(costPrice) : null,
         sale_price: salePrice ? parseFloat(salePrice) : null,
         glass_price: glassPrice ? parseFloat(glassPrice) : null,
@@ -235,6 +237,19 @@ export function WineForm({ wine, isEditing = false }: WineFormProps) {
                 className="w-full px-3 py-2 border border-slate-200 bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent"
               />
             </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-2">
+              Tasting Notes
+            </label>
+            <textarea
+              value={form.tasting_notes}
+              onChange={(e) => setForm({ ...form, tasting_notes: e.target.value })}
+              disabled={loading}
+              rows={4}
+              className="w-full px-3 py-2 border border-slate-200 bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent"
+              placeholder="e.g., Bright acidity, citrus notes, pair with seafood..."
+            />
           </div>
         </div>
       </div>

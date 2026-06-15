@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
+import Link from 'next/link'
 import { supabase } from '@/lib/supabase/client'
 import { toast } from 'sonner'
 import { SECTION_ORDER } from '@/constants/menu-sections'
@@ -260,12 +261,12 @@ export default function MenuDetailPage() {
             >
               {saving ? 'Saving...' : 'Save'}
             </button>
-            <button
-              onClick={handleExportPDF}
-              className="px-4 py-2 border border-slate-200 text-slate-700 rounded-lg font-medium text-sm hover:bg-slate-50 transition"
+            <Link
+              href={`/menus/${menuId}/preview`}
+              className="px-4 py-2 border border-slate-200 text-slate-700 rounded-lg font-medium text-sm hover:bg-slate-50 transition inline-block"
             >
-              ↓ PDF
-            </button>
+              👁️ Preview
+            </Link>
           </div>
         </div>
 
