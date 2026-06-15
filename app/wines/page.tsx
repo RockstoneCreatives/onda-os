@@ -105,17 +105,17 @@ export default function WinesPage() {
   }
 
   return (
-    <div className="ml-64 min-h-screen bg-slate-50">
+    <div className="ml-64 min-h-screen bg-onda-50">
       {/* Header */}
-      <div className="border-b border-slate-200 bg-white sticky top-0 z-10">
+      <div className="border-b border-onda-200 bg-white sticky top-0 z-10">
         <div className="px-8 py-6 flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">Wine List</h1>
-            <p className="text-slate-500 mt-1">{filteredWines.length} wines</p>
+            <h1 className="text-3xl font-bold text-onda-900">Wine List</h1>
+            <p className="text-onda-500 mt-1">{filteredWines.length} wines</p>
           </div>
           <Link
             href="/wines/new"
-            className="px-4 py-2 bg-onda-accent text-white rounded-lg hover:bg-onda-600 transition font-medium text-sm shadow-sm"
+            className="px-4 py-2 bg-onda-red text-white rounded-lg hover:bg-onda-600 transition font-medium text-sm shadow-sm"
           >
             + Add Wine
           </Link>
@@ -126,30 +126,30 @@ export default function WinesPage() {
       <div className="p-8">
         {loading ? (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-onda-accent"></div>
-            <p className="mt-4 text-slate-500">Loading wines...</p>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-onda-red"></div>
+            <p className="mt-4 text-onda-500">Loading wines...</p>
           </div>
         ) : (
           <>
             {/* Filters */}
-            <div className="bg-white rounded-lg border border-slate-200 p-4 mb-6 shadow-xs">
+            <div className="bg-white rounded-lg border border-onda-200 p-4 mb-6 shadow-xs">
               <div className="flex gap-4 items-end">
                 <div className="flex-1">
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Search</label>
+                  <label className="block text-sm font-medium text-onda-700 mb-2">Search</label>
                   <input
                     type="text"
                     placeholder="Search by producer or name..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent"
+                    className="w-full px-3 py-2 border border-onda-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-onda-red focus:border-transparent"
                   />
                 </div>
                 <div className="w-48">
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Style</label>
+                  <label className="block text-sm font-medium text-onda-700 mb-2">Style</label>
                   <select
                     value={filterColour}
                     onChange={(e) => setFilterColour(e.target.value)}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent"
+                    className="w-full px-3 py-2 border border-onda-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-onda-red focus:border-transparent"
                   >
                     <option value="">All Styles</option>
                     {colours.map((c) => (
@@ -166,26 +166,26 @@ export default function WinesPage() {
                     onChange={(e) => setShowInactive(e.target.checked)}
                     className="w-4 h-4"
                   />
-                  <span className="text-slate-700 font-medium">Show Inactive</span>
+                  <span className="text-onda-700 font-medium">Show Inactive</span>
                 </label>
               </div>
             </div>
 
             {/* Table */}
-            <div className="bg-white rounded-lg border border-slate-200 shadow-xs overflow-hidden">
+            <div className="bg-white rounded-lg border border-onda-200 shadow-xs overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-slate-200 bg-slate-50">
+                    <tr className="border-b border-onda-200 bg-onda-50">
                       {visibleColumns.map((col) => (
                         <th
                           key={col}
-                          className="text-left px-6 py-3 font-semibold text-xs text-slate-700 uppercase tracking-wider"
+                          className="text-left px-6 py-3 font-semibold text-xs text-onda-700 uppercase tracking-wider"
                         >
                           {ALL_COLUMNS.find((c) => c.key === col)?.label}
                         </th>
                       ))}
-                      <th className="text-left px-6 py-3 font-semibold text-xs text-slate-700 uppercase tracking-wider w-16">
+                      <th className="text-left px-6 py-3 font-semibold text-xs text-onda-700 uppercase tracking-wider w-16">
                         Action
                       </th>
                     </tr>
@@ -194,16 +194,16 @@ export default function WinesPage() {
                     {filteredWines.map((wine) => (
                       <tr
                         key={wine.id}
-                        className="border-b border-slate-200 hover:bg-slate-50 transition"
+                        className="border-b border-onda-200 hover:bg-onda-50 transition"
                       >
                         {visibleColumns.map((col) => {
                           let cellClass = 'px-6 py-4 text-sm'
-                          if (col === 'producer') cellClass += ' font-semibold text-slate-900'
+                          if (col === 'producer') cellClass += ' font-semibold text-onda-900'
                           else if (col === 'status') {
                             cellClass += wine.status === 'Active'
                               ? ' text-green-600 font-medium'
                               : ' text-red-600 font-medium'
-                          } else cellClass += ' text-slate-600'
+                          } else cellClass += ' text-onda-600'
 
                           return (
                             <td key={col} className={cellClass}>
@@ -214,7 +214,7 @@ export default function WinesPage() {
                         <td className="px-6 py-4 text-sm">
                           <Link
                             href={`/wines/${wine.id}/edit`}
-                            className="text-onda-accent hover:text-onda-600 font-medium transition"
+                            className="text-onda-red hover:text-onda-600 font-medium transition"
                           >
                             Edit
                           </Link>

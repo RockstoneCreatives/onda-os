@@ -198,17 +198,17 @@ export default function MenuDetailPage() {
 
   if (loading) {
     return (
-      <div className="ml-64 min-h-screen bg-slate-50">
-        <div className="border-b border-slate-200 bg-white">
+      <div className="ml-64 min-h-screen bg-onda-50">
+        <div className="border-b border-onda-200 bg-white">
           <div className="px-8 py-6">
-            <h1 className="text-3xl font-bold text-slate-900">Menu</h1>
+            <h1 className="text-3xl font-bold text-onda-900">Menu</h1>
           </div>
         </div>
         <main className="p-8 text-center py-12">
           <div className="inline-block">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-onda-accent"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-onda-red"></div>
           </div>
-          <p className="mt-4 text-slate-500">Loading menu...</p>
+          <p className="mt-4 text-onda-500">Loading menu...</p>
         </main>
       </div>
     )
@@ -216,34 +216,34 @@ export default function MenuDetailPage() {
 
   if (!menu) {
     return (
-      <div className="ml-64 min-h-screen bg-slate-50">
-        <div className="border-b border-slate-200 bg-white">
+      <div className="ml-64 min-h-screen bg-onda-50">
+        <div className="border-b border-onda-200 bg-white">
           <div className="px-8 py-6">
-            <h1 className="text-3xl font-bold text-slate-900">Menu</h1>
+            <h1 className="text-3xl font-bold text-onda-900">Menu</h1>
           </div>
         </div>
         <main className="p-8 text-center">
-          <p className="text-slate-600">Menu not found</p>
+          <p className="text-onda-600">Menu not found</p>
         </main>
       </div>
     )
   }
 
   return (
-    <div className="ml-64 min-h-screen bg-slate-50">
+    <div className="ml-64 min-h-screen bg-onda-50">
       {/* Header */}
-      <div className="border-b border-slate-200 bg-white">
+      <div className="border-b border-onda-200 bg-white">
         <div className="px-8 py-6">
-          <h1 className="text-3xl font-bold text-slate-900">Menu</h1>
-          <p className="text-slate-500 mt-1">Edit and manage your menu.</p>
+          <h1 className="text-3xl font-bold text-onda-900">Menu</h1>
+          <p className="text-onda-500 mt-1">Edit and manage your menu.</p>
         </div>
       </div>
 
       {/* Content */}
       <div className="p-8 max-w-4xl">
         {/* Menu Title Section */}
-        <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-xs mb-8">
-          <label className="block text-sm font-medium text-slate-700 mb-3">
+        <div className="bg-white rounded-lg border border-onda-200 p-6 shadow-xs mb-8">
+          <label className="block text-sm font-medium text-onda-700 mb-3">
             Menu Title
           </label>
           <div className="flex gap-3">
@@ -252,18 +252,18 @@ export default function MenuDetailPage() {
               value={menuTitle}
               onChange={(e) => setMenuTitle(e.target.value)}
               disabled={saving}
-              className="flex-1 px-3 py-2 border border-slate-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent"
+              className="flex-1 px-3 py-2 border border-onda-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-onda-red focus:border-transparent"
             />
             <button
               onClick={handleUpdateTitle}
               disabled={saving}
-              className="px-4 py-2 bg-onda-accent text-white rounded-lg font-medium text-sm hover:opacity-90 disabled:opacity-50 transition"
+              className="px-4 py-2 bg-onda-red text-white rounded-lg font-medium text-sm hover:opacity-90 disabled:opacity-50 transition"
             >
               {saving ? 'Saving...' : 'Save'}
             </button>
             <Link
               href={`/menus/${menuId}/preview`}
-              className="px-4 py-2 border border-slate-200 text-slate-700 rounded-lg font-medium text-sm hover:bg-slate-50 transition inline-block"
+              className="px-4 py-2 border border-onda-200 text-onda-700 rounded-lg font-medium text-sm hover:bg-onda-50 transition inline-block"
             >
               👁️ Preview
             </Link>
@@ -273,22 +273,22 @@ export default function MenuDetailPage() {
         {/* Sections */}
         <div className="space-y-6">
           {menu.sections.map((section) => (
-            <div key={section.id} className="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-xs">
-              <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
-                <h2 className="font-semibold text-lg text-slate-900">{section.name}</h2>
-                <p className="text-xs text-slate-500 mt-1">
+            <div key={section.id} className="bg-white rounded-lg border border-onda-200 overflow-hidden shadow-xs">
+              <div className="bg-onda-50 border-b border-onda-200 px-6 py-4">
+                <h2 className="font-semibold text-lg text-onda-900">{section.name}</h2>
+                <p className="text-xs text-onda-500 mt-1">
                   {section.wines.length} wine{section.wines.length !== 1 ? 's' : ''}
                 </p>
               </div>
 
-              <div className="divide-y divide-slate-200">
+              <div className="divide-y divide-onda-200">
                 {section.wines.map((wine, idx) => (
-                  <div key={wine.id} className="flex items-start gap-4 px-6 py-4 hover:bg-slate-50 transition">
+                  <div key={wine.id} className="flex items-start gap-4 px-6 py-4 hover:bg-onda-50 transition">
                     <div className="flex flex-col gap-1 pt-1">
                       <button
                         onClick={() => handleMoveWine(section.id, idx, 'up')}
                         disabled={idx === 0}
-                        className="px-2 py-0.5 text-slate-600 hover:text-onda-accent disabled:opacity-30 disabled:cursor-not-allowed font-bold text-sm"
+                        className="px-2 py-0.5 text-onda-600 hover:text-onda-red disabled:opacity-30 disabled:cursor-not-allowed font-bold text-sm"
                         title="Move up"
                       >
                         ▲
@@ -296,7 +296,7 @@ export default function MenuDetailPage() {
                       <button
                         onClick={() => handleMoveWine(section.id, idx, 'down')}
                         disabled={idx === section.wines.length - 1}
-                        className="px-2 py-0.5 text-slate-600 hover:text-onda-accent disabled:opacity-30 disabled:cursor-not-allowed font-bold text-sm"
+                        className="px-2 py-0.5 text-onda-600 hover:text-onda-red disabled:opacity-30 disabled:cursor-not-allowed font-bold text-sm"
                         title="Move down"
                       >
                         ▼
@@ -304,13 +304,13 @@ export default function MenuDetailPage() {
                     </div>
 
                     <div className="flex-1">
-                      <p className="font-medium text-slate-900">
+                      <p className="font-medium text-onda-900">
                         {wine.producer} – {wine.name} {wine.vintage}
                       </p>
-                      <p className="text-sm text-slate-500 mt-0.5">{wine.grapes}</p>
+                      <p className="text-sm text-onda-500 mt-0.5">{wine.grapes}</p>
                     </div>
 
-                    <div className="text-right text-sm text-slate-600 whitespace-nowrap flex flex-col items-end gap-1">
+                    <div className="text-right text-sm text-onda-600 whitespace-nowrap flex flex-col items-end gap-1">
                       {wine.glass_price && <div>G: €{wine.glass_price.toFixed(2)}</div>}
                       <div>B: €{wine.sale_price?.toFixed(2)}</div>
                     </div>

@@ -10,19 +10,15 @@ const config: Config = {
     extend: {
       colors: {
         onda: {
-          primary: "#1e1b4b",
-          accent: "#d97706",
-          secondary: "#f5e6e8",
-          50: "#fafaf9",
-          100: "#f5f3f0",
-          200: "#ede9e6",
-          300: "#d4cfc9",
-          400: "#9ca39c",
-          500: "#6b7280",
-          600: "#4b5563",
-          700: "#2d3748",
-          800: "#1f2937",
-          900: "#111827",
+          red: "#C0392B",
+          "red-dark": "#962d22",
+          blue: "#2563EB",
+          primary: "#1a1a1a",
+          50: "#FFF8F8",
+          100: "#FFE4E4",
+          200: "#FECACA",
+          500: "#6B6B6B",
+          700: "#374151",
         },
         slate: {
           50: "#f8fafc",
@@ -47,11 +43,11 @@ const config: Config = {
         sans: ['"Inter"', "sans-serif"],
       },
       boxShadow: {
-        xs: "0 1px 2px 0 rgba(30, 27, 75, 0.05)",
-        sm: "0 1px 3px 0 rgba(30, 27, 75, 0.1), 0 1px 2px 0 rgba(30, 27, 75, 0.06)",
-        md: "0 4px 6px -1px rgba(30, 27, 75, 0.1), 0 2px 4px -1px rgba(30, 27, 75, 0.06)",
-        lg: "0 10px 15px -3px rgba(30, 27, 75, 0.1), 0 4px 6px -2px rgba(30, 27, 75, 0.05)",
-        xl: "0 20px 25px -5px rgba(30, 27, 75, 0.1), 0 10px 10px -5px rgba(30, 27, 75, 0.04)",
+        xs: "0 1px 2px 0 rgba(26, 26, 26, 0.05)",
+        sm: "0 1px 3px 0 rgba(26, 26, 26, 0.1), 0 1px 2px 0 rgba(26, 26, 26, 0.06)",
+        md: "0 4px 6px -1px rgba(26, 26, 26, 0.1), 0 2px 4px -1px rgba(26, 26, 26, 0.06)",
+        lg: "0 10px 15px -3px rgba(26, 26, 26, 0.1), 0 4px 6px -2px rgba(26, 26, 26, 0.05)",
+        xl: "0 20px 25px -5px rgba(26, 26, 26, 0.1), 0 10px 10px -5px rgba(26, 26, 26, 0.04)",
       },
       keyframes: {
         "fade-out": {

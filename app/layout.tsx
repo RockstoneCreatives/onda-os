@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} h-full`}>
-      <body className="min-h-screen bg-onda-50 flex">
+      <body className="min-h-screen bg-onda-50 flex text-onda-primary">
         <Sidebar />
         <div className="flex-1 flex flex-col">
           <main className="flex-1">{children}</main>

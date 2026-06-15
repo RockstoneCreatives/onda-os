@@ -176,29 +176,29 @@ export default function CreateMenuPage() {
 
   if (loading) {
     return (
-      <div className="ml-64 min-h-screen bg-slate-50">
-        <div className="border-b border-slate-200 bg-white">
+      <div className="ml-64 min-h-screen bg-onda-50">
+        <div className="border-b border-onda-200 bg-white">
           <div className="px-8 py-6">
-            <h1 className="text-3xl font-bold text-slate-900">Create Menu</h1>
+            <h1 className="text-3xl font-bold text-onda-900">Create Menu</h1>
           </div>
         </div>
         <main className="p-8 text-center py-12">
           <div className="inline-block">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-onda-accent"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-onda-red"></div>
           </div>
-          <p className="mt-4 text-slate-500">Loading wines...</p>
+          <p className="mt-4 text-onda-500">Loading wines...</p>
         </main>
       </div>
     )
   }
 
   return (
-    <div className="ml-64 min-h-screen bg-slate-50">
+    <div className="ml-64 min-h-screen bg-onda-50">
       {/* Header */}
-      <div className="border-b border-slate-200 bg-white">
+      <div className="border-b border-onda-200 bg-white">
         <div className="px-8 py-6">
-          <h1 className="text-3xl font-bold text-slate-900">Create Menu</h1>
-          <p className="text-slate-500 mt-1">Select wines to build your menu.</p>
+          <h1 className="text-3xl font-bold text-onda-900">Create Menu</h1>
+          <p className="text-onda-500 mt-1">Select wines to build your menu.</p>
         </div>
       </div>
 
@@ -208,8 +208,8 @@ export default function CreateMenuPage() {
           {/* Wine Selection */}
           <div className="lg:col-span-2 space-y-6">
             {/* Menu Title */}
-            <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-xs">
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+            <div className="bg-white rounded-lg border border-onda-200 p-6 shadow-xs">
+              <label className="block text-sm font-medium text-onda-700 mb-2">
                 Menu Title <span className="text-red-500">*</span>
               </label>
               <input
@@ -218,7 +218,7 @@ export default function CreateMenuPage() {
                 onChange={(e) => setMenuTitle(e.target.value)}
                 placeholder="e.g., Summer 2026, June 20-26"
                 disabled={saving}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent"
+                className="w-full px-3 py-2 border border-onda-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-onda-red focus:border-transparent"
               />
             </div>
 
@@ -230,13 +230,13 @@ export default function CreateMenuPage() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 disabled={saving}
-                className="flex-1 px-3 py-2 border border-slate-200 bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent"
+                className="flex-1 px-3 py-2 border border-onda-200 bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-onda-red focus:border-transparent"
               />
               <select
                 value={filterColour}
                 onChange={(e) => setFilterColour(e.target.value)}
                 disabled={saving}
-                className="px-3 py-2 border border-slate-200 bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent"
+                className="px-3 py-2 border border-onda-200 bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-onda-red focus:border-transparent"
               >
                 <option value="">All Styles</option>
                 {colours.map((c) => (
@@ -250,15 +250,15 @@ export default function CreateMenuPage() {
             {/* Wine List by Colour */}
             <div className="space-y-6">
               {Object.entries(winesByColour).map(([colour, colourWines]) => (
-                <div key={colour} className="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-xs">
-                  <h3 className="bg-slate-50 border-b border-slate-200 px-6 py-3 font-semibold text-slate-900">
+                <div key={colour} className="bg-white rounded-lg border border-onda-200 overflow-hidden shadow-xs">
+                  <h3 className="bg-onda-50 border-b border-onda-200 px-6 py-3 font-semibold text-onda-900">
                     {colour}
                   </h3>
                   <div className="divide-y divide-slate-200">
                     {colourWines.map((wine) => (
                       <label
                         key={wine.id}
-                        className="flex items-start gap-3 px-6 py-4 hover:bg-slate-50 transition cursor-pointer"
+                        className="flex items-start gap-3 px-6 py-4 hover:bg-onda-50 transition cursor-pointer"
                       >
                         <input
                           type="checkbox"
@@ -268,14 +268,14 @@ export default function CreateMenuPage() {
                           className="mt-1"
                         />
                         <div className="flex-1">
-                          <p className="font-medium text-slate-900">
+                          <p className="font-medium text-onda-900">
                             {wine.producer} – {wine.name} {wine.vintage || ''}
                           </p>
-                          <p className="text-sm text-slate-500 mt-0.5">
+                          <p className="text-sm text-onda-500 mt-0.5">
                             {wine.region} {wine.country && `(${wine.country})`}
                           </p>
                         </div>
-                        <div className="text-right text-sm text-slate-600 whitespace-nowrap flex flex-col items-end gap-1">
+                        <div className="text-right text-sm text-onda-600 whitespace-nowrap flex flex-col items-end gap-1">
                           {wine.glass_price && <div>G: €{wine.glass_price.toFixed(2)}</div>}
                           <div>B: €{wine.sale_price?.toFixed(2)}</div>
                         </div>
@@ -289,27 +289,27 @@ export default function CreateMenuPage() {
 
           {/* Preview Sidebar */}
           <div className="lg:col-span-1">
-            <div className="sticky top-8 bg-white rounded-lg border border-slate-200 p-6 shadow-xs space-y-6">
+            <div className="sticky top-8 bg-white rounded-lg border border-onda-200 p-6 shadow-xs space-y-6">
               <div>
-                <h3 className="font-semibold text-slate-900">Preview</h3>
-                <p className="text-4xl font-bold text-onda-accent mt-2">
+                <h3 className="font-semibold text-onda-900">Preview</h3>
+                <p className="text-4xl font-bold text-onda-red mt-2">
                   {selectedWines.size}
                 </p>
-                <p className="text-sm text-slate-500 mt-1">
+                <p className="text-sm text-onda-500 mt-1">
                   wine{selectedWines.size !== 1 ? 's' : ''} selected
                 </p>
               </div>
 
-              <div className="pt-6 border-t border-slate-200 space-y-4">
+              <div className="pt-6 border-t border-onda-200 space-y-4">
                 {previewSections.length === 0 ? (
-                  <p className="text-sm text-slate-500">Select wines to preview</p>
+                  <p className="text-sm text-onda-500">Select wines to preview</p>
                 ) : (
                   previewSections.map((section) => (
                     <div key={section.key}>
-                      <p className="font-medium text-slate-900 text-sm">
+                      <p className="font-medium text-onda-900 text-sm">
                         {section.display}
                       </p>
-                      <p className="text-xs text-slate-500 mt-0.5">
+                      <p className="text-xs text-onda-500 mt-0.5">
                         {section.wines.length} wine{section.wines.length !== 1 ? 's' : ''}
                       </p>
                     </div>
@@ -321,7 +321,7 @@ export default function CreateMenuPage() {
                 <button
                   onClick={handleCreateMenu}
                   disabled={saving || selectedWines.size === 0 || !menuTitle.trim()}
-                  className="w-full py-2 bg-onda-accent text-white rounded-lg font-medium text-sm hover:opacity-90 disabled:opacity-50 transition"
+                  className="w-full py-2 bg-onda-red text-white rounded-lg font-medium text-sm hover:opacity-90 disabled:opacity-50 transition"
                 >
                   {saving ? 'Creating...' : 'Create Menu'}
                 </button>
@@ -329,7 +329,7 @@ export default function CreateMenuPage() {
                 <button
                   onClick={() => setSelectedWines(new Set())}
                   disabled={saving}
-                  className="w-full py-2 border border-slate-200 text-slate-700 rounded-lg font-medium text-sm hover:bg-slate-50 transition"
+                  className="w-full py-2 border border-onda-200 text-onda-700 rounded-lg font-medium text-sm hover:bg-onda-50 transition"
                 >
                   Clear
                 </button>

@@ -76,10 +76,10 @@ export default function EditWinePage() {
 
   if (loading) {
     return (
-      <div className="ml-64 min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="ml-64 min-h-screen bg-onda-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-onda-accent mx-auto"></div>
-          <p className="mt-4 text-slate-500">Loading wine...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-onda-red mx-auto"></div>
+          <p className="mt-4 text-onda-500">Loading wine...</p>
         </div>
       </div>
     )
@@ -87,10 +87,10 @@ export default function EditWinePage() {
 
   if (!wine) {
     return (
-      <div className="ml-64 min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="ml-64 min-h-screen bg-onda-50 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-slate-600 mb-4">Wine not found</p>
-          <Link href="/wines" className="text-onda-accent hover:opacity-80 font-medium">
+          <p className="text-onda-600 mb-4">Wine not found</p>
+          <Link href="/wines" className="text-onda-red hover:opacity-80 font-medium">
             Back to Wines
           </Link>
         </div>
@@ -99,14 +99,14 @@ export default function EditWinePage() {
   }
 
   return (
-    <div className="ml-64 min-h-screen bg-slate-50">
+    <div className="ml-64 min-h-screen bg-onda-50">
       {/* Header */}
-      <div className="border-b border-slate-200 bg-white sticky top-0 z-10">
+      <div className="border-b border-onda-200 bg-white sticky top-0 z-10">
         <div className="px-8 py-4 flex justify-between items-center">
-          <Link href="/wines" className="text-onda-accent font-medium hover:opacity-80">
+          <Link href="/wines" className="text-onda-red font-medium hover:opacity-80">
             ← Back to Wines
           </Link>
-          <h1 className="text-2xl font-bold text-slate-900">Edit Wine</h1>
+          <h1 className="text-2xl font-bold text-onda-900">Edit Wine</h1>
           <div className="w-24"></div>
         </div>
       </div>
@@ -116,9 +116,9 @@ export default function EditWinePage() {
         <WineForm wine={wine} isEditing />
 
         {/* Delete Section */}
-        <div className="mt-12 pt-8 border-t border-slate-200">
-          <h3 className="text-lg font-semibold text-slate-900 mb-3">Danger Zone</h3>
-          <p className="text-sm text-slate-600 mb-4">
+        <div className="mt-12 pt-8 border-t border-onda-200">
+          <h3 className="text-lg font-semibold text-onda-900 mb-3">Danger Zone</h3>
+          <p className="text-sm text-onda-600 mb-4">
             Permanently delete this wine from the system. This action cannot be undone.
           </p>
           <button

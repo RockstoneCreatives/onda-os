@@ -139,7 +139,7 @@ export default function MenuPreviewPage() {
     return (
       <div className="ml-64 min-h-screen bg-onda-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-onda-accent mx-auto"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-onda-red mx-auto"></div>
           <p className="mt-4 text-onda-500">Loading menu preview...</p>
         </div>
       </div>
@@ -150,8 +150,8 @@ export default function MenuPreviewPage() {
     return (
       <div className="ml-64 min-h-screen bg-onda-50 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-slate-600 mb-4">Menu not found</p>
-          <Link href="/menus" className="text-onda-accent hover:opacity-80 font-medium">
+          <p className="text-onda-600 mb-4">Menu not found</p>
+          <Link href="/menus" className="text-onda-red hover:opacity-80 font-medium">
             Back to Menus
           </Link>
         </div>
@@ -163,7 +163,7 @@ export default function MenuPreviewPage() {
     <div className="ml-64 min-h-screen bg-white">
       {/* Header */}
       <div className="sticky top-0 z-10 bg-white border-b border-onda-200 px-8 py-4 flex justify-between items-center">
-        <Link href={`/menus/${menuId}`} className="text-onda-accent font-medium hover:opacity-80">
+        <Link href={`/menus/${menuId}`} className="text-onda-red font-medium hover:opacity-80">
           ← Back to Edit
         </Link>
         <h1 className="text-2xl font-bold text-onda-primary">{menu.title}</h1>
@@ -177,7 +177,7 @@ export default function MenuPreviewPage() {
           <button
             onClick={handleDownloadPDF}
             disabled={downloading}
-            className="px-4 py-2 bg-onda-accent text-white rounded-lg text-sm font-medium hover:opacity-90 disabled:opacity-50 transition"
+            className="px-4 py-2 bg-onda-red text-white rounded-lg text-sm font-medium hover:opacity-90 disabled:opacity-50 transition"
           >
             {downloading ? '⬇️ Downloading...' : '⬇️ PDF'}
           </button>
@@ -195,7 +195,7 @@ export default function MenuPreviewPage() {
             return (
               <div key={section.id} className="mb-12">
                 {/* Section Header */}
-                <h2 className="text-3xl font-bold text-onda-accent uppercase mb-6">
+                <h2 className="text-3xl font-bold text-onda-red uppercase mb-6">
                   {section.name}
                 </h2>
 

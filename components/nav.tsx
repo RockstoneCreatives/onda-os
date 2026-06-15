@@ -28,7 +28,7 @@ export function Nav({ currentPage }: NavProps) {
           <Link
             href="/wines"
             className={`font-condensed font-bold uppercase text-lg tracking-tight transition ${
-              isActive('wines') ? 'text-onda-accent' : 'text-onda-text hover:text-onda-accent'
+              isActive('wines') ? 'text-onda-red' : 'text-onda-text hover:text-onda-red'
             }`}
           >
             Wines
@@ -40,7 +40,7 @@ export function Nav({ currentPage }: NavProps) {
           <Link
             href="/menus"
             className={`font-condensed font-bold uppercase text-lg tracking-tight transition ${
-              isActive('menus') ? 'text-onda-accent' : 'text-onda-text hover:text-onda-accent'
+              isActive('menus') ? 'text-onda-red' : 'text-onda-text hover:text-onda-red'
             }`}
           >
             Menus
@@ -52,7 +52,7 @@ export function Nav({ currentPage }: NavProps) {
           <Link
             href="/menus/new"
             className={`font-condensed font-bold uppercase text-lg tracking-tight transition ${
-              isActive('create') ? 'text-onda-accent' : 'text-onda-text hover:text-onda-accent'
+              isActive('create') ? 'text-onda-red' : 'text-onda-text hover:text-onda-red'
             }`}
           >
             + Create Menu
@@ -63,7 +63,7 @@ export function Nav({ currentPage }: NavProps) {
         <div className="flex-1 flex items-center justify-center">
           <button
             onClick={handleSignOut}
-            className="font-condensed font-bold uppercase text-lg text-onda-text hover:text-onda-accent transition tracking-tight"
+            className="font-condensed font-bold uppercase text-lg text-onda-text hover:text-onda-red transition tracking-tight"
           >
             Sign Out
           </button>

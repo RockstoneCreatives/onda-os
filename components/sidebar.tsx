@@ -25,13 +25,13 @@ export function Sidebar() {
   ]
 
   return (
-    <aside className="w-64 bg-onda-primary border-r border-onda-300 flex flex-col fixed left-0 top-0 h-screen">
+    <aside className="w-64 bg-white border-r border-onda-200 flex flex-col fixed left-0 top-0 h-screen">
       {/* Logo */}
-      <div className="px-6 py-8 border-b border-onda-300">
-        <Link href="/" className="text-2xl font-bold text-onda-accent hover:opacity-80 transition">
+      <div className="px-6 py-8 border-b border-onda-200">
+        <Link href="/" className="text-2xl font-bold text-onda-red hover:opacity-80 transition">
           Onda OS
         </Link>
-        <p className="text-xs text-onda-400 mt-1">Wine Management</p>
+        <p className="text-xs text-onda-500 mt-1">Wine Management</p>
       </div>
 
       {/* Navigation */}
@@ -42,10 +42,10 @@ export function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`block px-4 py-2.5 rounded-lg transition text-sm font-medium ${
+              className={`block px-4 py-2.5 rounded-lg transition text-sm font-medium border-l-4 pl-3 ${
                 active
-                  ? 'bg-onda-accent bg-opacity-15 text-onda-accent'
-                  : 'text-onda-300 hover:bg-onda-700 hover:text-onda-accent'
+                  ? 'border-onda-red bg-onda-100 text-onda-red'
+                  : 'border-transparent text-onda-700 hover:text-onda-red hover:bg-onda-50'
               }`}
             >
               {item.label}
@@ -55,10 +55,10 @@ export function Sidebar() {
       </nav>
 
       {/* Sign Out */}
-      <div className="px-4 py-6 border-t border-onda-300">
+      <div className="px-4 py-6 border-t border-onda-200">
         <button
           onClick={handleSignOut}
-          className="w-full px-4 py-2.5 text-onda-300 hover:bg-onda-700 hover:text-onda-accent rounded-lg transition text-sm font-medium"
+          className="w-full px-4 py-2.5 text-onda-primary hover:text-onda-red hover:bg-onda-50 rounded-lg transition text-sm font-medium"
         >
           Sign Out
         </button>

@@ -263,11 +263,11 @@ export const VirtualizedTable = () => {
 
 export default function TableDemo() {
   return (
-    <div className="ml-64 min-h-screen bg-slate-50">
-      <div className="border-b border-slate-200 bg-white">
+    <div className="ml-64 min-h-screen bg-onda-50">
+      <div className="border-b border-onda-200 bg-white">
         <div className="px-8 py-6">
-          <h1 className="text-3xl font-bold text-slate-900">Table Component Demo</h1>
-          <p className="text-slate-500 mt-1">Explore different table configurations and features.</p>
+          <h1 className="text-3xl font-bold text-onda-900">Table Component Demo</h1>
+          <p className="text-onda-500 mt-1">Explore different table configurations and features.</p>
         </div>
       </div>
 

@@ -110,7 +110,7 @@ export default function InventoryPage() {
     return (
       <div className="ml-64 min-h-screen bg-onda-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-onda-accent mx-auto"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-onda-red mx-auto"></div>
           <p className="mt-4 text-onda-500">Loading inventory...</p>
         </div>
       </div>
@@ -123,13 +123,13 @@ export default function InventoryPage() {
       <div className="border-b border-onda-200 bg-white sticky top-0 z-10">
         <div className="px-8 py-6">
           <div className="flex justify-between items-center mb-4">
-            <Link href="/wines" className="text-onda-accent font-medium hover:opacity-80">
+            <Link href="/wines" className="text-onda-red font-medium hover:opacity-80">
               ← Back to Wines
             </Link>
             <h1 className="text-3xl font-bold text-onda-primary">Wine Inventory</h1>
             <button
               onClick={() => window.print()}
-              className="px-4 py-2 bg-onda-accent text-white rounded-lg font-medium text-sm hover:opacity-90 transition"
+              className="px-4 py-2 bg-onda-red text-white rounded-lg font-medium text-sm hover:opacity-90 transition"
             >
               🖨️ Print
             </button>
@@ -142,13 +142,13 @@ export default function InventoryPage() {
               placeholder="Search by producer, wine, or location..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="px-3 py-2 border border-onda-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent"
+              className="px-3 py-2 border border-onda-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-onda-red focus:border-transparent"
             />
 
             <select
               value={selectedStyle}
               onChange={(e) => setSelectedStyle(e.target.value)}
-              className="px-3 py-2 border border-onda-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent"
+              className="px-3 py-2 border border-onda-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-onda-red focus:border-transparent"
             >
               <option value="">All Styles</option>
               {styles.map((style) => (
@@ -164,7 +164,7 @@ export default function InventoryPage() {
                 setSelectedCountry(e.target.value)
                 setSelectedRegion('')
               }}
-              className="px-3 py-2 border border-onda-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent"
+              className="px-3 py-2 border border-onda-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-onda-red focus:border-transparent"
             >
               <option value="">All Countries</option>
               {countries.map((country) => (
@@ -178,7 +178,7 @@ export default function InventoryPage() {
               value={selectedRegion}
               onChange={(e) => setSelectedRegion(e.target.value)}
               disabled={!selectedCountry}
-              className="px-3 py-2 border border-onda-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-onda-accent focus:border-transparent disabled:opacity-50"
+              className="px-3 py-2 border border-onda-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-onda-red focus:border-transparent disabled:opacity-50"
             >
               <option value="">All Regions</option>
               {regions.map((region) => (
@@ -234,7 +234,7 @@ export default function InventoryPage() {
                       {wine.producer}
                     </td>
                     <td className="px-6 py-4 text-sm text-onda-700">{wine.name || '—'}</td>
-                    <td className="px-6 py-4 text-sm font-semibold text-onda-accent">
+                    <td className="px-6 py-4 text-sm font-semibold text-onda-red">
                       {wine.inventory_location || '—'}
                     </td>
                   </tr>
