@@ -38,9 +38,11 @@ export function Sidebar() {
   return (
     <aside className={`bg-white border-r border-onda-200 flex flex-col fixed left-0 top-0 h-screen print:hidden transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'}`}>
       {/* Header */}
-      <div className={`px-4 py-6 border-b border-onda-200 flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
+      <div className={`px-4 py-8 border-b border-onda-200 flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
         {!isCollapsed && (
-          <p className="text-xs uppercase tracking-widest font-semibold text-onda-500">ONDA OS</p>
+          <Link href="/" className="text-2xl font-black text-onda-red hover:opacity-80 transition tracking-widest flex-1">
+            ONDA OS
+          </Link>
         )}
         <button
           onClick={toggleCollapsed}

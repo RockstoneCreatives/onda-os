@@ -186,59 +186,53 @@ export default function MenuPreviewPage() {
                       )
 
                       return (
-                        <div key={country} style={{ marginTop: '12px', marginBottom: '6px' }}>
-                          {/* Country Header */}
-                          <h3 className="font-bold text-black" style={{ fontSize: '10pt', marginBottom: '6px' }}>
-                            {country}
-                          </h3>
-                          <div className="space-y-1" style={{ marginBottom: '12px' }}>
-                            {regionGroups.map(([region, firstRegionWine]) => {
-                              const regionWines = countryWines.filter(
-                                (w) => (w.region || '') === region
-                              )
+                        <div key={country}>
+                          {regionGroups.map(([region, firstRegionWine]) => {
+                            const regionWines = countryWines.filter(
+                              (w) => (w.region || '') === region
+                            )
+                            // Format location: "Country" or "Country – Region"
+                            const locationLabel = region ? `${country} – ${region}` : country
 
-                              return (
-                                <div key={region} style={{ marginBottom: '12px' }}>
-                                  {/* Region subheader */}
-                                  {region && (
-                                    <h4 className="italic text-black" style={{ fontSize: '10pt', marginBottom: '4px' }}>
-                                      {region}
-                                    </h4>
-                                  )}
-                                  <div className="space-y-1"  style={{ marginBottom: '8px' }}>
-                                    {regionWines.map((wine) => (
-                                      <div
-                                        key={wine.menu_item_id}
-                                        className="flex justify-between items-baseline gap-6"
-                                        style={{ marginBottom: '5px', fontSize: '10pt' }}
-                                      >
-                                        <div className="flex-1">
-                                          <p className="text-black leading-tight" style={{ fontSize: '10pt' }}>
-                                            <span>{wine.producer}</span>
-                                            {wine.name && ` – ${wine.name}`}
-                                            {wine.vintage && ` ${wine.vintage}`}
-                                            {wine.grapes && (
-                                              <span className="italic" style={{ color: '#666' }}> – {wine.grapes}</span>
-                                            )}
-                                          </p>
-                                        </div>
-                                        <div className="flex gap-12 text-black whitespace-nowrap" style={{ fontSize: '10pt', gap: '24px' }}>
-                                          {wine.glass_price ? (
-                                            <>
-                                              <span style={{ width: '40px', textAlign: 'right' }}>{wine.glass_price.toFixed(0)}</span>
-                                              <span style={{ width: '40px', textAlign: 'right' }}>{wine.sale_price?.toFixed(0)}</span>
-                                            </>
-                                          ) : (
-                                            <span style={{ width: '80px', textAlign: 'right' }}>{wine.sale_price?.toFixed(0)}</span>
+                            return (
+                              <div key={region} style={{ marginBottom: '12px' }}>
+                                {/* Country/Region header (not bold, on single line) */}
+                                <p className="italic text-black" style={{ fontSize: '10pt', marginBottom: '4px', fontWeight: 'normal' }}>
+                                  {locationLabel}
+                                </p>
+                                <div className="space-y-1"  style={{ marginBottom: '8px' }}>
+                                  {regionWines.map((wine) => (
+                                    <div
+                                      key={wine.menu_item_id}
+                                      className="flex justify-between items-baseline gap-6"
+                                      style={{ marginBottom: '5px', fontSize: '10pt' }}
+                                    >
+                                      <div className="flex-1">
+                                        <p className="text-black leading-tight" style={{ fontSize: '10pt' }}>
+                                          <span>{wine.producer}</span>
+                                          {wine.name && ` – ${wine.name}`}
+                                          {wine.vintage && ` ${wine.vintage}`}
+                                          {wine.grapes && (
+                                            <span className="italic" style={{ color: '#666' }}> – {wine.grapes}</span>
                                           )}
-                                        </div>
+                                        </p>
                                       </div>
-                                    ))}
-                                  </div>
+                                      <div className="flex gap-12 text-black whitespace-nowrap" style={{ fontSize: '10pt', gap: '24px' }}>
+                                        {wine.glass_price ? (
+                                          <>
+                                            <span style={{ width: '40px', textAlign: 'right' }}>{wine.glass_price.toFixed(0)}</span>
+                                            <span style={{ width: '40px', textAlign: 'right' }}>{wine.sale_price?.toFixed(0)}</span>
+                                          </>
+                                        ) : (
+                                          <span style={{ width: '80px', textAlign: 'right' }}>{wine.sale_price?.toFixed(0)}</span>
+                                        )}
+                                      </div>
+                                    </div>
+                                  ))}
                                 </div>
-                              )
-                            })}
-                          </div>
+                              </div>
+                            )
+                          })}
                         </div>
                       )
                     })}
@@ -248,21 +242,41 @@ export default function MenuPreviewPage() {
                   <div className="space-y-1" style={{ marginBottom: '12px' }}>
                     {Array.from(
                       new Map(
-                        section.wines.map((w) => [w.country || w.region || 'Other', w])
+                        section.wines.map((w) => {
+                          // Format consistently: show country and region together if both exist
+                          let key = w.country || ''
+                          if (w.region && w.country) {
+                            key = `${w.country} – ${w.region}`
+                          } else if (w.region) {
+                            key = w.region
+                          } else if (!key) {
+                            key = 'Other'
+                          }
+                          return [key, w]
+                        })
                       ).entries()
-                    ).map(([regionCountry, firstWine]) => {
-                      const regionWines = section.wines.filter(
-                        (w) => (w.country || w.region || 'Other') === regionCountry
-                      )
+                    ).map(([locationLabel, firstWine]) => {
+                      // Reconstruct the wines for this location
+                      const locationWines = section.wines.filter((w) => {
+                        let key = w.country || ''
+                        if (w.region && w.country) {
+                          key = `${w.country} – ${w.region}`
+                        } else if (w.region) {
+                          key = w.region
+                        } else if (!key) {
+                          key = 'Other'
+                        }
+                        return key === locationLabel
+                      })
 
                       return (
-                        <div key={regionCountry} style={{ marginBottom: '12px' }}>
-                          {/* Region/Country header for non-hierarchical */}
-                          <h4 className="italic text-black" style={{ fontSize: '10pt', marginBottom: '4px' }}>
-                            {regionCountry}
-                          </h4>
+                        <div key={locationLabel} style={{ marginBottom: '12px' }}>
+                          {/* Location header (not bold, on single line) */}
+                          <p className="italic text-black" style={{ fontSize: '10pt', marginBottom: '4px', fontWeight: 'normal' }}>
+                            {locationLabel}
+                          </p>
                           <div className="space-y-1" style={{ marginBottom: '8px' }}>
-                            {regionWines.map((wine) => (
+                            {locationWines.map((wine) => (
                               <div
                                 key={wine.menu_item_id}
                                 className="flex justify-between items-baseline gap-6"
@@ -304,8 +318,6 @@ export default function MenuPreviewPage() {
         {/* Onda Logo at bottom */}
         <div style={{
           marginTop: '40px',
-          paddingTop: '20px',
-          borderTop: '1px solid #d1d5db',
           display: 'flex',
           justifyContent: 'center'
         }}>

@@ -64,7 +64,7 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="border-b border-onda-200 bg-white">
         <div className="px-8 py-8">
-          <h1 className="text-5xl font-bold text-onda-primary tracking-tight">ONDA OS</h1>
+          <h1 className="text-5xl font-bold text-onda-primary tracking-tight">Wine Management</h1>
           <div className="mt-1 h-1 w-16 bg-onda-red rounded-full"></div>
           <p className="text-onda-500 mt-4 text-base">Manage your wine inventory and create menus</p>
         </div>
