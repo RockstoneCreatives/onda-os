@@ -169,9 +169,9 @@ export default function InventoryPage() {
     <MainContent>
       <div>
       {/* Header */}
-      <div className="border-b border-onda-200 bg-white sticky top-0 z-10">
+      <div className="border-b border-onda-200 bg-white sticky top-0 z-30 print:relative">
         <div className="px-8 py-6">
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex justify-between items-center">
             <Link href="/wines" className="text-onda-red font-medium hover:opacity-80">
               ← Back to Wines
             </Link>
@@ -183,13 +183,17 @@ export default function InventoryPage() {
               🖨️ Print
             </button>
           </div>
+        </div>
+      </div>
 
-          {/* Filters */}
-          <div className="flex gap-4 items-end print:hidden">
-            <div className="flex-1">
+      {/* Sticky Filter Bar */}
+      <div className="border-b border-onda-200 bg-white sticky top-14 z-20 print:hidden">
+        <div className="px-8 py-4">
+          <div className="flex gap-3 items-end flex-wrap">
+            <div className="flex-1 min-w-64">
               <input
                 type="text"
-                placeholder="Search by producer, wine, or location..."
+                placeholder="Search..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full px-3 py-2 border border-onda-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-onda-red focus:border-transparent"
@@ -199,7 +203,7 @@ export default function InventoryPage() {
             <select
               value={selectedStyle}
               onChange={(e) => setSelectedStyle(e.target.value)}
-              className="px-3 py-2 border border-onda-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-onda-red focus:border-transparent"
+              className="px-3 py-2 border border-onda-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-onda-red focus:border-transparent whitespace-nowrap"
             >
               <option value="">All Styles</option>
               {styles.map((style) => (
@@ -215,7 +219,7 @@ export default function InventoryPage() {
                 setSelectedCountry(e.target.value)
                 setSelectedRegion('')
               }}
-              className="px-3 py-2 border border-onda-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-onda-red focus:border-transparent"
+              className="px-3 py-2 border border-onda-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-onda-red focus:border-transparent whitespace-nowrap"
             >
               <option value="">All Countries</option>
               {countries.map((country) => (
@@ -229,7 +233,7 @@ export default function InventoryPage() {
               value={selectedRegion}
               onChange={(e) => setSelectedRegion(e.target.value)}
               disabled={!selectedCountry}
-              className="px-3 py-2 border border-onda-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-onda-red focus:border-transparent disabled:opacity-50"
+              className="px-3 py-2 border border-onda-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-onda-red focus:border-transparent disabled:opacity-50 whitespace-nowrap"
             >
               <option value="">All Regions</option>
               {regions.map((region) => (
@@ -241,11 +245,11 @@ export default function InventoryPage() {
 
             {/* Column Visibility Dropdown */}
             <div className="relative group">
-              <button className="px-3 py-2 border border-onda-200 rounded-lg text-sm font-medium text-onda-700 hover:bg-onda-50 transition">
+              <button className="px-3 py-2 border border-onda-200 rounded-lg text-sm font-medium text-onda-700 hover:bg-onda-50 transition whitespace-nowrap">
                 ⚙️ Columns
               </button>
-              <div className="absolute right-0 mt-1 w-48 bg-white border border-onda-200 rounded-lg shadow-lg hidden group-hover:block z-20">
-                <div className="p-3 space-y-2">
+              <div className="absolute right-0 mt-1 w-48 bg-white border border-onda-200 rounded-lg shadow-lg hidden group-hover:block z-50">
+                <div className="p-3 space-y-2 max-h-96 overflow-y-auto">
                   {ALL_COLUMNS.map((col) => (
                     <label key={col.key} className="flex items-center gap-2 text-sm cursor-pointer hover:bg-onda-50 p-1 rounded">
                       <input
@@ -265,21 +269,21 @@ export default function InventoryPage() {
       </div>
 
       {/* Content */}
-      <div className="p-8">
+      <div className="p-4 flex-1 overflow-hidden">
         {filteredWines.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-onda-500">No wines match your filters</p>
           </div>
         ) : (
-          <div className="bg-white border border-onda-200 rounded-lg overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-onda-50 border-b border-onda-200">
+          <div className="bg-white border border-onda-200 rounded-lg overflow-hidden h-full flex flex-col">
+            <div className="overflow-x-auto flex-1">
+              <table className="w-full text-xs">
+                <thead className="bg-onda-50 border-b border-onda-200 sticky top-0 z-10">
                   <tr>
                     {visibleColumns.map((col) => (
                       <th
                         key={col}
-                        className="text-left px-6 py-3 font-semibold text-xs text-onda-700 uppercase tracking-wider"
+                        className="text-left px-3 py-2 font-semibold text-onda-700 uppercase tracking-widest whitespace-nowrap"
                       >
                         {ALL_COLUMNS.find((c) => c.key === col)?.label}
                       </th>
@@ -290,17 +294,17 @@ export default function InventoryPage() {
                   {filteredWines.map((wine) => (
                     <tr
                       key={wine.id}
-                      className="border-b border-onda-200 hover:bg-onda-50 transition"
+                      className="border-b border-onda-200 hover:bg-onda-50 transition text-xs"
                     >
                       {visibleColumns.map((col) => {
-                        let cellClass = 'px-6 py-4 text-sm'
+                        let cellClass = 'px-3 py-2 truncate'
                         if (col === 'producer') cellClass += ' font-semibold text-onda-900'
                         else if (col === 'colour_style') cellClass += ' font-medium text-onda-600'
                         else if (col === 'inventory_location') cellClass += ' font-semibold text-onda-red'
                         else cellClass += ' text-onda-700'
 
                         return (
-                          <td key={col} className={cellClass}>
+                          <td key={col} className={cellClass} title={String(getDisplayValue(wine, col))}>
                             {getDisplayValue(wine, col)}
                           </td>
                         )
@@ -312,7 +316,7 @@ export default function InventoryPage() {
             </div>
 
             {/* Summary */}
-            <div className="bg-onda-50 border-t border-onda-200 px-6 py-3 text-sm text-onda-600">
+            <div className="bg-onda-50 border-t border-onda-200 px-4 py-2 text-xs text-onda-600">
               Showing {filteredWines.length} of {wines.length} wines
             </div>
           </div>
