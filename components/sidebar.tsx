@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
+import { useState } from 'react'
 import { supabase } from '@/lib/supabase/client'
 import { toast } from 'sonner'
 import { useSidebar } from '@/contexts/sidebar-context'
@@ -10,6 +11,7 @@ export function Sidebar() {
   const router = useRouter()
   const pathname = usePathname()
   const { isCollapsed, toggleCollapsed } = useSidebar()
+  const [wineManagementOpen, setWineManagementOpen] = useState(true)
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
@@ -24,24 +26,21 @@ export function Sidebar() {
     return pathname === path || pathname.startsWith(path + '/')
   }
 
-  const navItems = [
+  const wineManagementItems = [
     { href: '/', label: 'Dashboard' },
     { href: '/wines', label: 'Wines' },
     { href: '/wines/inventory', label: 'Inventory' },
     { href: '/menus', label: 'Menus' },
   ]
 
+  const isWineManagementActive = wineManagementItems.some(item => isActive(item.href))
+
   return (
     <aside className={`bg-white border-r border-onda-200 flex flex-col fixed left-0 top-0 h-screen print:hidden transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'}`}>
-      {/* Collapse Button & Logo */}
+      {/* Header */}
       <div className={`px-4 py-6 border-b border-onda-200 flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
         {!isCollapsed && (
-          <div>
-            <Link href="/" className="text-2xl font-bold text-onda-red hover:opacity-80 transition tracking-widest block">
-              ONDA OS
-            </Link>
-            <p className="text-xs text-onda-500 mt-2 uppercase tracking-widest font-semibold">Wine Management</p>
-          </div>
+          <p className="text-xs uppercase tracking-widest font-semibold text-onda-500">ONDA OS</p>
         )}
         <button
           onClick={toggleCollapsed}
@@ -54,23 +53,43 @@ export function Sidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 px-2 py-6 space-y-2">
-        {navItems.map((item) => {
-          const active = isActive(item.href)
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`block px-4 py-2.5 rounded-lg transition text-xs font-semibold border-l-4 pl-3 uppercase tracking-wide ${
-                active
-                  ? 'border-onda-red bg-onda-100 text-onda-red'
-                  : 'border-transparent text-onda-700 hover:text-onda-red hover:bg-onda-50'
-              } ${isCollapsed ? 'text-center px-1 pl-1 truncate' : ''}`}
-              title={isCollapsed ? item.label : undefined}
-            >
-              {isCollapsed ? item.label.charAt(0).toUpperCase() : item.label}
-            </Link>
-          )
-        })}
+        {/* Wine Management Section */}
+        <div>
+          <button
+            onClick={() => setWineManagementOpen(!wineManagementOpen)}
+            className={`w-full flex items-center justify-between px-4 py-2.5 rounded-lg transition text-xs font-semibold uppercase tracking-wide ${
+              isWineManagementActive
+                ? 'border-l-4 border-onda-red bg-onda-100 text-onda-red'
+                : 'border-l-4 border-transparent text-onda-700 hover:text-onda-red hover:bg-onda-50'
+            } ${isCollapsed ? 'justify-center' : ''}`}
+          >
+            {!isCollapsed && 'Wine Management'}
+            {!isCollapsed && <span className={`ml-auto transition-transform ${wineManagementOpen ? 'rotate-180' : ''}`}>▼</span>}
+            {isCollapsed && <span>🍇</span>}
+          </button>
+
+          {/* Wine Management Items */}
+          {wineManagementOpen && !isCollapsed && (
+            <div className="space-y-1 mt-2 ml-4 border-l-2 border-onda-100 pl-0">
+              {wineManagementItems.map((item) => {
+                const active = isActive(item.href)
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`block px-4 py-2 rounded-lg transition text-xs font-medium uppercase tracking-wide ${
+                      active
+                        ? 'text-onda-red bg-onda-50'
+                        : 'text-onda-600 hover:text-onda-red hover:bg-onda-50'
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                )
+              })}
+            </div>
+          )}
+        </div>
       </nav>
 
       {/* Sign Out */}
