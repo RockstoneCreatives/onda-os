@@ -161,7 +161,7 @@ export default function MenuPreviewPage() {
             const hierarchical = sectionKey ? isHierarchical(sectionKey) : false
 
             return (
-              <div key={section.id} className={`${sectionIndex === 0 ? 'relative' : ''} ${sectionIndex > 0 ? 'print:page-break-before-always' : ''} mb-16 print:mb-12`}>
+              <div key={section.id} className="mb-16 print:mb-8 print:break-inside-avoid">
                 {/* Section Header with price header */}
                 <div className="flex justify-between items-baseline" style={{ marginBottom: '12px', marginTop: sectionIndex === 0 ? '0' : '24px' }}>
                   <h2 className="font-bold text-black" style={{ fontSize: '22pt', lineHeight: '1.1' }}>
@@ -301,15 +301,14 @@ export default function MenuPreviewPage() {
           })
         )}
 
-        {/* Onda Logo at bottom of page 1 */}
+        {/* Onda Logo at bottom */}
         <div style={{
-          marginTop: '60px',
-          paddingTop: '40px',
+          marginTop: '40px',
+          paddingTop: '20px',
           borderTop: '1px solid #d1d5db',
           display: 'flex',
-          justifyContent: 'center',
-          pageBreakAfter: 'always'
-        }} className="print:page-break-after-always">
+          justifyContent: 'center'
+        }}>
           <svg
             width="120"
             height="60"
@@ -348,26 +347,19 @@ export default function MenuPreviewPage() {
           .print\:hidden {
             display: none !important;
           }
-          .print\:page-break-before-always {
-            page-break-before: always !important;
+          .print\:break-inside-avoid {
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
           }
           body {
             background: white;
             margin: 0;
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
-            width: 210mm;
-            height: 297mm;
           }
           @page {
             size: A4;
             margin: 20mm;
-          }
-          @media print {
-            html {
-              width: 210mm;
-              height: 297mm;
-            }
           }
         }
       `}</style>
