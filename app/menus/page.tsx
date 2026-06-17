@@ -60,10 +60,18 @@ export default function MenusPage() {
   return (
     <div className="ml-64 min-h-screen bg-onda-50">
       {/* Header */}
-      <div className="border-b border-onda-200 bg-white">
-        <div className="px-8 py-6">
-          <h1 className="text-3xl font-bold text-onda-900">Menus</h1>
-          <p className="text-onda-500 mt-1">View and manage your created menus.</p>
+      <div className="border-b border-onda-200 bg-white sticky top-0 z-10">
+        <div className="px-8 py-6 flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-onda-900">Menus</h1>
+            <p className="text-onda-500 mt-1">View and manage your created menus.</p>
+          </div>
+          <Link
+            href="/menus/new"
+            className="px-4 py-2 bg-onda-red text-white rounded-lg hover:bg-onda-600 transition font-medium text-sm shadow-sm"
+          >
+            + Create Menu
+          </Link>
         </div>
       </div>
 

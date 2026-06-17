@@ -78,7 +78,7 @@ export default function WinesPage() {
   }, [router])
 
   const colours = useMemo(() => {
-    return Array.from(new Set(wines.map((w) => w.colour_style))).sort()
+    return Array.from(new Set(wines.map((w) => w.colour_style).filter((s): s is string => s !== null))).sort()
   }, [wines])
 
   const filteredWines = useMemo(() => {

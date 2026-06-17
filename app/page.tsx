@@ -62,8 +62,9 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="border-b border-onda-200 bg-white">
         <div className="px-8 py-8">
-          <h1 className="text-4xl font-bold text-onda-primary">Dashboard</h1>
-          <p className="text-onda-500 mt-2 text-base">Manage your wine inventory and create menus</p>
+          <h1 className="text-5xl font-bold text-onda-primary tracking-tight">ONDA OS</h1>
+          <div className="mt-1 h-1 w-16 bg-onda-red rounded-full"></div>
+          <p className="text-onda-500 mt-4 text-base">Manage your wine inventory and create menus</p>
         </div>
       </div>
 
@@ -79,32 +80,28 @@ export default function DashboardPage() {
         ) : (
           <>
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-              <div className="animate-slide-up bg-white rounded-xl border border-onda-200 p-6 shadow-sm hover:shadow-md transition-all">
-                <p className="text-sm font-medium text-onda-500">Total Wines</p>
-                <p className="text-4xl font-bold text-onda-primary mt-3">{stats.totalWines}</p>
-                <div className="mt-4 h-1 w-12 bg-onda-red rounded-full"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+              <div className="animate-slide-up bg-white rounded-lg border border-onda-200 border-l-4 border-l-onda-red p-6 hover:shadow-md transition-all">
+                <p className="text-xs uppercase tracking-widest font-semibold text-onda-500">Total Wines</p>
+                <p className="text-5xl font-bold text-onda-primary mt-4">{stats.totalWines}</p>
               </div>
-              <div className="animate-slide-up bg-white rounded-xl border border-onda-200 p-6 shadow-sm hover:shadow-md transition-all" style={{ animationDelay: '0.1s' }}>
-                <p className="text-sm font-medium text-onda-500">Active Wines</p>
-                <p className="text-4xl font-bold text-emerald-600 mt-3">{stats.activeWines}</p>
-                <div className="mt-4 h-1 w-12 bg-emerald-500 rounded-full"></div>
+              <div className="animate-slide-up bg-white rounded-lg border border-onda-200 border-l-4 border-l-emerald-500 p-6 hover:shadow-md transition-all" style={{ animationDelay: '0.1s' }}>
+                <p className="text-xs uppercase tracking-widest font-semibold text-onda-500">Active Wines</p>
+                <p className="text-5xl font-bold text-emerald-600 mt-4">{stats.activeWines}</p>
               </div>
-              <div className="animate-slide-up bg-white rounded-xl border border-onda-200 p-6 shadow-sm hover:shadow-md transition-all" style={{ animationDelay: '0.2s' }}>
-                <p className="text-sm font-medium text-onda-500">Inactive Wines</p>
-                <p className="text-4xl font-bold text-onda-primary mt-3">{stats.inactiveWines}</p>
-                <div className="mt-4 h-1 w-12 bg-onda-red rounded-full"></div>
+              <div className="animate-slide-up bg-white rounded-lg border border-onda-200 border-l-4 border-l-onda-red p-6 hover:shadow-md transition-all" style={{ animationDelay: '0.2s' }}>
+                <p className="text-xs uppercase tracking-widest font-semibold text-onda-500">Inactive Wines</p>
+                <p className="text-5xl font-bold text-onda-primary mt-4">{stats.inactiveWines}</p>
               </div>
-              <div className="animate-slide-up bg-white rounded-xl border border-onda-200 p-6 shadow-sm hover:shadow-md transition-all" style={{ animationDelay: '0.3s' }}>
-                <p className="text-sm font-medium text-onda-500">Menus Created</p>
-                <p className="text-4xl font-bold text-onda-red mt-3">{stats.menusCreated}</p>
-                <div className="mt-4 h-1 w-12 bg-onda-red rounded-full"></div>
+              <div className="animate-slide-up bg-white rounded-lg border border-onda-200 border-l-4 border-l-onda-red p-6 hover:shadow-md transition-all" style={{ animationDelay: '0.3s' }}>
+                <p className="text-xs uppercase tracking-widest font-semibold text-onda-500">Menus Created</p>
+                <p className="text-5xl font-bold text-onda-red mt-4">{stats.menusCreated}</p>
               </div>
             </div>
 
             {/* Quick Actions */}
-            <div className="mb-12">
-              <h2 className="text-lg font-semibold text-onda-primary mb-6">Quick Actions</h2>
+            <div className="mb-16">
+              <h2 className="text-xs uppercase tracking-widest font-semibold text-onda-500 mb-6">Quick Actions</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Browse Wines */}
                 <Link href="/wines" className="group">
@@ -151,9 +148,9 @@ export default function DashboardPage() {
             </div>
 
             {/* Phase 2 Features */}
-            <div>
+            <div className="mb-16">
               <div className="flex items-center gap-2 mb-6">
-                <h2 className="text-lg font-semibold text-onda-primary">Coming Soon — Phase 2</h2>
+                <h2 className="text-xs uppercase tracking-widest font-semibold text-onda-500">Coming Soon — Phase 2</h2>
                 <span className="bg-onda-blue text-white text-xs px-2 py-1 rounded font-medium">Phase 2</span>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -170,10 +167,6 @@ export default function DashboardPage() {
                         <p className="text-onda-500 text-sm mt-2 leading-relaxed">
                           Connect your POS system for automatic wine inventory sync.
                         </p>
-                        <div className="flex items-center gap-2 mt-4">
-                          <span className="text-xs bg-onda-200 text-onda-primary px-2 py-1 rounded">🔒 Locked</span>
-                          <p className="text-onda-500 text-xs">Phase 2 feature</p>
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -192,12 +185,59 @@ export default function DashboardPage() {
                         <p className="text-onda-500 text-sm mt-2 leading-relaxed">
                           View sales trends, popular wines, and menu performance.
                         </p>
-                        <div className="flex items-center gap-2 mt-4">
-                          <span className="text-xs bg-onda-200 text-onda-primary px-2 py-1 rounded">🔒 Locked</span>
-                          <p className="text-onda-500 text-xs">Phase 2 feature</p>
-                        </div>
                       </div>
                     </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            {/* Phase 3 Features */}
+            <div>
+              <div className="flex items-center gap-2 mb-6">
+                <h2 className="text-xs uppercase tracking-widest font-semibold text-onda-500">Coming Soon — Phase 3</h2>
+                <span className="bg-onda-blue text-white text-xs px-2 py-1 rounded font-medium">Phase 3</span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Google Drive Sync */}
+                <button
+                  onClick={() => toast.info('Google Drive sync is coming in Phase 3. Stay tuned!')}
+                  className="group"
+                >
+                  <div className="bg-white rounded-xl border border-onda-200 p-8 shadow-sm hover:shadow-md transition-all h-full opacity-60 hover:opacity-75 cursor-not-allowed text-left">
+                    <div className="h-12 w-12 rounded-lg bg-onda-100 flex items-center justify-center text-2xl mb-4">📁</div>
+                    <h3 className="text-lg font-semibold text-onda-primary">Google Drive Sync</h3>
+                    <p className="text-onda-500 text-sm mt-2 leading-relaxed">
+                      Automatically export menus and wine lists to your Google Drive as formatted documents.
+                    </p>
+                  </div>
+                </button>
+
+                {/* AI Sommelier */}
+                <button
+                  onClick={() => toast.info('AI Sommelier is coming in Phase 3. Stay tuned!')}
+                  className="group"
+                >
+                  <div className="bg-white rounded-xl border border-onda-200 p-8 shadow-sm hover:shadow-md transition-all h-full opacity-60 hover:opacity-75 cursor-not-allowed text-left">
+                    <div className="h-12 w-12 rounded-lg bg-onda-100 flex items-center justify-center text-2xl mb-4">🤖</div>
+                    <h3 className="text-lg font-semibold text-onda-primary">AI Sommelier</h3>
+                    <p className="text-onda-500 text-sm mt-2 leading-relaxed">
+                      Chat-based wine recommendations, food pairing suggestions, and guest-facing descriptions powered by AI.
+                    </p>
+                  </div>
+                </button>
+
+                {/* Supplier Catalogue */}
+                <button
+                  onClick={() => toast.info('Supplier catalogue is coming in Phase 3. Stay tuned!')}
+                  className="group"
+                >
+                  <div className="bg-white rounded-xl border border-onda-200 p-8 shadow-sm hover:shadow-md transition-all h-full opacity-60 hover:opacity-75 cursor-not-allowed text-left">
+                    <div className="h-12 w-12 rounded-lg bg-onda-100 flex items-center justify-center text-2xl mb-4">📦</div>
+                    <h3 className="text-lg font-semibold text-onda-primary">Supplier Catalogue</h3>
+                    <p className="text-onda-500 text-sm mt-2 leading-relaxed">
+                      Browse your suppliers' current stock, compare wines, and sync new arrivals directly into your inventory.
+                    </p>
                   </div>
                 </button>
               </div>

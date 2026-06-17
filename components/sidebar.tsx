@@ -15,23 +15,28 @@ export function Sidebar() {
     router.push('/login')
   }
 
-  const isActive = (path: string) => pathname === path || pathname.startsWith(path + '/')
+  const isActive = (path: string) => {
+    if (path === '/wines') {
+      return pathname === '/wines' || (pathname.startsWith('/wines/') && !pathname.startsWith('/wines/inventory'))
+    }
+    return pathname === path || pathname.startsWith(path + '/')
+  }
 
   const navItems = [
-    { href: '/', label: 'Dashboard', pattern: ['/', '/page'] },
-    { href: '/wines', label: 'Wines', pattern: ['/wines'] },
-    { href: '/wines/inventory', label: 'Inventory', pattern: ['/wines/inventory'] },
-    { href: '/menus', label: 'Menus', pattern: ['/menus'] },
+    { href: '/', label: 'Dashboard' },
+    { href: '/wines', label: 'Wines' },
+    { href: '/wines/inventory', label: 'Inventory' },
+    { href: '/menus', label: 'Menus' },
   ]
 
   return (
-    <aside className="w-64 bg-white border-r border-onda-200 flex flex-col fixed left-0 top-0 h-screen">
+    <aside className="w-64 bg-white border-r border-onda-200 flex flex-col fixed left-0 top-0 h-screen print:hidden">
       {/* Logo */}
       <div className="px-6 py-8 border-b border-onda-200">
-        <Link href="/" className="text-2xl font-bold text-onda-red hover:opacity-80 transition">
-          Onda OS
+        <Link href="/" className="text-2xl font-bold text-onda-red hover:opacity-80 transition tracking-widest">
+          ONDA OS
         </Link>
-        <p className="text-xs text-onda-500 mt-1">Wine Management</p>
+        <p className="text-xs text-onda-500 mt-2 uppercase tracking-widest font-semibold">Wine Management</p>
       </div>
 
       {/* Navigation */}
@@ -42,7 +47,7 @@ export function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`block px-4 py-2.5 rounded-lg transition text-sm font-medium border-l-4 pl-3 ${
+              className={`block px-4 py-2.5 rounded-lg transition text-xs font-semibold border-l-4 pl-3 uppercase tracking-wide ${
                 active
                   ? 'border-onda-red bg-onda-100 text-onda-red'
                   : 'border-transparent text-onda-700 hover:text-onda-red hover:bg-onda-50'

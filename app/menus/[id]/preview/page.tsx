@@ -28,7 +28,6 @@ export default function MenuPreviewPage() {
 
   const [menu, setMenu] = useState<Menu | null>(null)
   const [loading, setLoading] = useState(true)
-  const [downloading, setDownloading] = useState(false)
 
   useEffect(() => {
     const fetchMenu = async () => {
@@ -110,46 +109,6 @@ export default function MenuPreviewPage() {
     fetchMenu()
   }, [menuId, router])
 
-  const handleDownloadPDF = async () => {
-    setDownloading(true)
-    try {
-      const response = await fetch(`/api/menus/${menuId}/pdf`)
-
-      if (!response.ok) {
-        const errorText = await response.text()
-        console.error('PDF API error:', response.status, errorText)
-        throw new Error(`Server error: ${response.status}`)
-      }
-
-      const contentType = response.headers.get('content-type')
-      if (!contentType?.includes('application/pdf')) {
-        const text = await response.text()
-        console.error('Invalid content type:', contentType, text)
-        throw new Error('Invalid response format from server')
-      }
-
-      const blob = await response.blob()
-      if (blob.size === 0) {
-        throw new Error('PDF generation returned empty file')
-      }
-
-      const url = window.URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `${menu?.title || 'menu'}.pdf`
-      document.body.appendChild(a)
-      a.click()
-      window.URL.revokeObjectURL(url)
-      document.body.removeChild(a)
-      toast.success('PDF downloaded')
-    } catch (err) {
-      const error = err as Error
-      console.error('PDF download error:', error)
-      toast.error(error.message || 'Failed to download PDF')
-    } finally {
-      setDownloading(false)
-    }
-  }
 
   if (loading) {
     return (
@@ -183,21 +142,12 @@ export default function MenuPreviewPage() {
           ← Back to Edit
         </Link>
         <h1 className="text-2xl font-bold text-black">{menu.title}</h1>
-        <div className="flex gap-3">
-          <button
-            onClick={() => window.print()}
-            className="px-4 py-2 border border-gray-300 text-gray-700 rounded text-sm font-medium hover:bg-gray-50 transition"
-          >
-            🖨️ Print
-          </button>
-          <button
-            onClick={handleDownloadPDF}
-            disabled={downloading}
-            className="px-4 py-2 bg-onda-red text-white rounded text-sm font-medium hover:opacity-90 disabled:opacity-50 transition"
-          >
-            {downloading ? '⬇️ Downloading...' : '⬇️ PDF'}
-          </button>
-        </div>
+        <button
+          onClick={() => window.print()}
+          className="px-4 py-2 bg-onda-red text-white rounded text-sm font-medium hover:opacity-90 transition"
+        >
+          ⬇️ Save as PDF
+        </button>
       </div>
 
       {/* Menu Content - Print optimized */}

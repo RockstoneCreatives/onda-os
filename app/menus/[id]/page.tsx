@@ -312,7 +312,7 @@ export default function MenuDetailPage() {
 
                     <div className="text-right text-sm text-onda-600 whitespace-nowrap flex flex-col items-end gap-1">
                       {wine.glass_price && <div>G: €{wine.glass_price.toFixed(2)}</div>}
-                      <div>B: €{wine.sale_price?.toFixed(2)}</div>
+                      <div>B: €{wine.sale_price != null ? wine.sale_price.toFixed(2) : '—'}</div>
                     </div>
                   </div>
                 ))}
