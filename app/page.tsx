@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase/client'
 import { toast } from 'sonner'
+import { MainContent } from '@/components/main-content'
 
 interface Stats {
   totalWines: number
@@ -58,7 +59,8 @@ export default function DashboardPage() {
   }, [router])
 
   return (
-    <div className="ml-64 min-h-screen bg-onda-50">
+    <MainContent>
+      <div>
       {/* Header */}
       <div className="border-b border-onda-200 bg-white">
         <div className="px-8 py-8">
@@ -245,6 +247,7 @@ export default function DashboardPage() {
           </>
         )}
       </div>
-    </div>
+      </div>
+    </MainContent>
   )
 }

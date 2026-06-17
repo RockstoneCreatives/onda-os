@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase/client'
 import { WineForm } from '@/components/wine-form'
+import { MainContent } from '@/components/main-content'
 
 export default function AddWinePage() {
   const router = useRouter()
@@ -20,7 +21,8 @@ export default function AddWinePage() {
   }, [router])
 
   return (
-    <div className="ml-64 min-h-screen bg-onda-50">
+    <MainContent>
+      <div>
       {/* Header */}
       <div className="border-b border-onda-200 bg-white sticky top-0 z-10">
         <div className="px-8 py-4 flex justify-between items-center">
@@ -36,6 +38,7 @@ export default function AddWinePage() {
       <main className="max-w-3xl mx-auto px-8 py-8">
         <WineForm />
       </main>
-    </div>
+      </div>
+    </MainContent>
   )
 }

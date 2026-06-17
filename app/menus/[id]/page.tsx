@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase/client'
 import { toast } from 'sonner'
+import { MainContent } from '@/components/main-content'
 import { SECTION_ORDER } from '@/constants/menu-sections'
 import type { Database } from '@/lib/supabase/client'
 
@@ -198,7 +199,8 @@ export default function MenuDetailPage() {
 
   if (loading) {
     return (
-      <div className="ml-64 min-h-screen bg-onda-50">
+      <MainContent>
+        <div>
         <div className="border-b border-onda-200 bg-white">
           <div className="px-8 py-6">
             <h1 className="text-3xl font-bold text-onda-900">Menu</h1>
@@ -211,12 +213,13 @@ export default function MenuDetailPage() {
           <p className="mt-4 text-onda-500">Loading menu...</p>
         </main>
       </div>
+    </MainContent>
     )
   }
 
   if (!menu) {
     return (
-      <div className="ml-64 min-h-screen bg-onda-50">
+      <MainContent>
         <div className="border-b border-onda-200 bg-white">
           <div className="px-8 py-6">
             <h1 className="text-3xl font-bold text-onda-900">Menu</h1>
@@ -225,12 +228,13 @@ export default function MenuDetailPage() {
         <main className="p-8 text-center">
           <p className="text-onda-600">Menu not found</p>
         </main>
-      </div>
+      </MainContent>
     )
   }
 
   return (
-    <div className="ml-64 min-h-screen bg-onda-50">
+    <MainContent>
+      <div>
       {/* Header */}
       <div className="border-b border-onda-200 bg-white">
         <div className="px-8 py-6">
@@ -321,6 +325,7 @@ export default function MenuDetailPage() {
           ))}
         </div>
       </div>
-    </div>
+      </div>
+    </MainContent>
   )
 }

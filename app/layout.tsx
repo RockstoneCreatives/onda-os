@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Sidebar } from "@/components/sidebar";
 import { Footer } from "@/components/footer";
+import { SidebarProvider } from "@/contexts/sidebar-context";
 import { Toaster } from "sonner";
 import "./globals.css";
 
@@ -23,11 +24,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} h-full`}>
       <body className="min-h-screen bg-onda-50 flex text-onda-primary">
-        <Sidebar />
-        <div className="flex-1 flex flex-col">
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </div>
+        <SidebarProvider>
+          <Sidebar />
+          <div className="flex-1 flex flex-col">
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </div>
+        </SidebarProvider>
         <Toaster richColors />
       </body>
     </html>

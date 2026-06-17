@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase/client'
 import { toast } from 'sonner'
+import { MainContent } from '@/components/main-content'
 import type { Database } from '@/lib/supabase/client'
 
 type Menu = Database['public']['Tables']['menus']['Row']
@@ -58,7 +59,8 @@ export default function MenusPage() {
   }
 
   return (
-    <div className="ml-64 min-h-screen bg-onda-50">
+    <MainContent>
+      <div>
       {/* Header */}
       <div className="border-b border-onda-200 bg-white sticky top-0 z-10">
         <div className="px-8 py-6 flex justify-between items-center">
@@ -126,6 +128,7 @@ export default function MenusPage() {
           </div>
         )}
       </div>
-    </div>
+      </div>
+    </MainContent>
   )
 }

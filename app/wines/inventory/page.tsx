@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase/client'
 import { toast } from 'sonner'
+import { MainContent } from '@/components/main-content'
 import type { Database } from '@/lib/supabase/client'
 
 type Wine = Database['public']['Tables']['wines']['Row']
@@ -153,17 +154,20 @@ export default function InventoryPage() {
 
   if (loading) {
     return (
-      <div className="ml-64 min-h-screen bg-onda-50 flex items-center justify-center">
+      <MainContent>
+        <div className="flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-onda-red mx-auto"></div>
           <p className="mt-4 text-onda-500">Loading inventory...</p>
         </div>
       </div>
+      </MainContent>
     )
   }
 
   return (
-    <div className="ml-64 min-h-screen bg-onda-50">
+    <MainContent>
+      <div>
       {/* Header */}
       <div className="border-b border-onda-200 bg-white sticky top-0 z-10">
         <div className="px-8 py-6">
@@ -332,6 +336,7 @@ export default function InventoryPage() {
           }
         }
       `}</style>
-    </div>
+      </div>
+    </MainContent>
   )
 }

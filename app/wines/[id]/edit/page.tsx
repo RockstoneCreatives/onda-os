@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { supabase } from '@/lib/supabase/client'
 import { WineForm } from '@/components/wine-form'
 import { toast } from 'sonner'
+import { MainContent } from '@/components/main-content'
 import type { Database } from '@/lib/supabase/client'
 
 type Wine = Database['public']['Tables']['wines']['Row']
@@ -76,18 +77,21 @@ export default function EditWinePage() {
 
   if (loading) {
     return (
-      <div className="ml-64 min-h-screen bg-onda-50 flex items-center justify-center">
+      <MainContent>
+        <div className="flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-onda-red mx-auto"></div>
           <p className="mt-4 text-onda-500">Loading wine...</p>
         </div>
       </div>
+      </MainContent>
     )
   }
 
   if (!wine) {
     return (
-      <div className="ml-64 min-h-screen bg-onda-50 flex items-center justify-center">
+      <MainContent>
+        <div className="flex items-center justify-center">
         <div className="text-center">
           <p className="text-onda-600 mb-4">Wine not found</p>
           <Link href="/wines" className="text-onda-red hover:opacity-80 font-medium">
@@ -95,11 +99,13 @@ export default function EditWinePage() {
           </Link>
         </div>
       </div>
+      </MainContent>
     )
   }
 
   return (
-    <div className="ml-64 min-h-screen bg-onda-50">
+    <MainContent>
+      <div>
       {/* Header */}
       <div className="border-b border-onda-200 bg-white sticky top-0 z-10">
         <div className="px-8 py-4 flex justify-between items-center">
@@ -130,6 +136,7 @@ export default function EditWinePage() {
           </button>
         </div>
       </main>
-    </div>
+      </div>
+    </MainContent>
   )
 }

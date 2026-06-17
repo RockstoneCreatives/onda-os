@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase/client'
 import { toast } from 'sonner'
+import { MainContent } from '@/components/main-content'
 import { SECTION_ORDER } from '@/constants/menu-sections'
 import type { Database } from '@/lib/supabase/client'
 
@@ -176,7 +177,7 @@ export default function CreateMenuPage() {
 
   if (loading) {
     return (
-      <div className="ml-64 min-h-screen bg-onda-50">
+      <MainContent>
         <div className="border-b border-onda-200 bg-white">
           <div className="px-8 py-6">
             <h1 className="text-3xl font-bold text-onda-900">Create Menu</h1>
@@ -188,12 +189,12 @@ export default function CreateMenuPage() {
           </div>
           <p className="mt-4 text-onda-500">Loading wines...</p>
         </main>
-      </div>
+      </MainContent>
     )
   }
 
   return (
-    <div className="ml-64 min-h-screen bg-onda-50">
+    <MainContent>
       {/* Header */}
       <div className="border-b border-onda-200 bg-white">
         <div className="px-8 py-6">
@@ -338,6 +339,6 @@ export default function CreateMenuPage() {
           </div>
         </div>
       </div>
-    </div>
+    </MainContent>
   )
 }
