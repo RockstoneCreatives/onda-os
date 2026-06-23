@@ -224,28 +224,37 @@ export default function CreateMenuPage() {
             </div>
 
             {/* Filters */}
-            <div className="flex gap-3">
-              <input
-                type="text"
-                placeholder="Search producer or wine name..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                disabled={saving}
-                className="flex-1 px-3 py-2 border border-onda-200 bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-onda-red focus:border-transparent"
-              />
-              <select
-                value={filterColour}
-                onChange={(e) => setFilterColour(e.target.value)}
-                disabled={saving}
-                className="px-3 py-2 border border-onda-200 bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-onda-red focus:border-transparent"
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <input
+                  type="text"
+                  placeholder="Search producer or wine name..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  disabled={saving}
+                  className="flex-1 px-3 py-2 border border-onda-200 bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-onda-red focus:border-transparent"
+                />
+                <select
+                  value={filterColour}
+                  onChange={(e) => setFilterColour(e.target.value)}
+                  disabled={saving}
+                  className="px-3 py-2 border border-onda-200 bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-onda-red focus:border-transparent"
+                >
+                  <option value="">All Styles</option>
+                  {colours.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <button
+                onClick={() => setSelectedWines(new Set(filteredWines.map((w) => w.id)))}
+                disabled={saving || filteredWines.length === 0}
+                className="px-4 py-2.5 bg-onda-red text-white rounded-lg font-medium text-sm hover:opacity-90 transition disabled:opacity-50"
               >
-                <option value="">All Styles</option>
-                {colours.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </select>
+                ✓ Select All {filteredWines.length > 0 && `(${filteredWines.length})`}
+              </button>
             </div>
 
             {/* Wine List by Colour */}
