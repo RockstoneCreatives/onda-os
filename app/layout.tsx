@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { Sidebar } from "@/components/sidebar";
+import { ConditionalSidebar } from "@/components/conditional-sidebar";
 import { Footer } from "@/components/footer";
 import { AIKobeyBadge } from "@/components/ai-kobey-badge";
 import { SidebarProvider } from "@/contexts/sidebar-context";
@@ -26,7 +26,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} h-full`}>
       <body className="min-h-screen bg-onda-50 flex text-onda-primary">
         <SidebarProvider>
-          <Sidebar />
+          <ConditionalSidebar />
           <div className="flex-1 flex flex-col">
             <main className="flex-1">{children}</main>
             <Footer />
