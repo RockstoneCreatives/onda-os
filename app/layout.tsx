@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Sidebar } from "@/components/sidebar";
 import { Footer } from "@/components/footer";
+import { AIKobeyBadge } from "@/components/ai-kobey-badge";
 import { SidebarProvider } from "@/contexts/sidebar-context";
 import { Toaster } from "sonner";
 import "./globals.css";
@@ -31,6 +32,7 @@ export default function RootLayout({
             <Footer />
           </div>
         </SidebarProvider>
+        <AIKobeyBadge />
         <Toaster richColors />
       </body>
     </html>
